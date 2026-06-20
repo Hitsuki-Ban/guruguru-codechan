@@ -2,19 +2,34 @@
 
 **Codeちゃんは見ている。**
 
-Guruguru Codechan adds a small dockable companion view to VS Code. Codeちゃん watches your editor, blinks, turns toward the pointer or editor cursor, and can be replaced with your own guruguru-style character assets.
+Guruguru Codechan adds a dockable Codeちゃん companion view to VS Code.
+Codeちゃん blinks, quietly watches you work, and turns her gaze when the pointer comes close.
+
+When work gets tiring, take a small break and play with Codeちゃん for a moment.
+
+You can also replace her with your own guruguru-style character assets.
 
 ![Guruguru Codechan preview](https://raw.githubusercontent.com/Hitsuki-Ban/guruguru-codechan/main/extension/media/marketplace/codechan-view.png)
 
 English | [日本語](https://github.com/Hitsuki-Ban/guruguru-codechan/blob/main/docs/i18n/README.ja.md) | [简体中文](https://github.com/Hitsuki-Ban/guruguru-codechan/blob/main/docs/i18n/README.zh-CN.md)
 
+## Preview
+
+### Mouse interaction
+
+![Codeちゃん follows the mouse pointer](https://raw.githubusercontent.com/Hitsuki-Ban/guruguru-codechan/main/extension/media/marketplace/demo-pointer.gif)
+
+### Editor cursor tracking
+
+![Codeちゃん follows the editor cursor](https://raw.githubusercontent.com/Hitsuki-Ban/guruguru-codechan/main/extension/media/marketplace/demo-editor-cursor.gif)
+
 ## What You Get
 
 - A dockable VS Code view for Codeちゃん.
-- Pointer and editor-cursor gaze tracking inside the limits of the VS Code API.
+- Pointer and editor-cursor gaze tracking where VS Code exposes enough information.
 - A settings layer for position, scale, gaze lock, character import, and character deletion.
 - A bundled non-commercial sample character.
-- Local custom character import. Imported files are stored only in VS Code global extension storage, not in your workspace.
+- Local custom character import.
 
 ## Quick Start
 
@@ -52,30 +67,39 @@ The extension validates the frame names, rejects missing or mixed-format assets,
 
 ## What Changed For VS Code
 
-This extension is inspired by the original browser avatar method, but it is adapted for everyday use inside VS Code:
+This extension follows the browser avatar idea, then adjusts it for everyday use inside VS Code:
 
-- The avatar runs in a VS Code Webview view instead of a browser page.
-- The view can be docked beside the editor, terminal, or other panels.
-- Character switching and import are handled by VS Code commands and in-view settings.
-- Gaze tracking uses pointer movement inside the view and editor selection information available through the public VS Code API.
-- Rendering is kept lightweight by showing only the active frame and by normalizing imported large assets to 512px.
+- Performance: the runtime shows only the active frame, and imported large images are normalized to 512px to reduce resource use.
+- Input: gaze tracking uses pointer and editor-selection information available through the public VS Code API.
+- Mouth animation: mouth frames react to typing today, and the `mouthLevel` channel can be connected to TTS later.
 
-VS Code does not provide global mouse coordinates or exact positions for every workbench panel, so this extension does not behave like an operating-system-level desktop pet. It stays inside the VS Code view system.
+VS Code does not expose global mouse coordinates or exact positions for every workbench panel.
+Because of that, Codeちゃん cannot perform perfectly accurate global mouse tracking.
 
-## Credits
+### Quick Troubleshooting
 
-Thank you to [rotejin](https://github.com/rotejin) for creating and publishing [tomari-guruguru](https://github.com/rotejin/tomari-guruguru), the original implementation that demonstrated the 25-direction guruguru avatar method and the mouth/blink frame structure.
+#### Codeちゃん is not looking the right way in the editor
 
-This project does not bundle the original Tomari assets. The bundled Codeちゃん sample is a separate non-commercial sample asset set.
+Move the pointer through the Codeちゃん view once, then return to the editor. Codeちゃん estimates the editor direction from the last pointer-exit direction when exact workbench geometry is not available.
 
-## License And Asset Rights
+#### I want Codeちゃん to look in one fixed direction
 
-Program code is MIT licensed. Bundled sample assets are non-commercial only; see [ASSET_LICENSE.md](./ASSET_LICENSE.md).
+Click the settings button, click an empty spot in the companion canvas, then choose `Lock Gaze`.
 
-User-imported assets remain owned by the user or their licensors. Please import only assets that you have the right to use.
+#### I found another issue
 
-## Support
+Please report reproducible problems through [GitHub Issues](https://github.com/Hitsuki-Ban/guruguru-codechan/issues).
 
-Use GitHub Issues for reproducible bugs, import problems, and asset-rights questions:
+## Credits And License
 
-https://github.com/Hitsuki-Ban/guruguru-codechan/issues
+Thank you to [rotejin](https://github.com/rotejin) for creating and publishing [tomari-guruguru](https://github.com/rotejin/tomari-guruguru).
+That project demonstrated the 25-direction guruguru avatar method and the mouth/blink frame structure.
+
+This project does not include Tomari-related assets.
+
+Program code is MIT licensed.
+The bundled sample asset, Codeちゃん, is a fan character designed by Hitsuki.
+Codeちゃん is non-commercial only; see [ASSET_LICENSE.md](./ASSET_LICENSE.md).
+
+User-imported assets remain owned by the user or their licensors, and are stored locally.
+Please import only assets that you have the right to use.

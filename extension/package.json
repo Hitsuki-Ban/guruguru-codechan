@@ -2,7 +2,7 @@
   "name": "guruguru-codechan",
   "displayName": "%extension.displayName%",
   "description": "%extension.description%",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "publisher": "hitsuki-ban",
   "license": "SEE LICENSE IN LICENSE",
   "type": "commonjs",

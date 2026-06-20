@@ -11,6 +11,7 @@ const MAX_WEBVIEW_CSS_BYTES = 8 * 1024;
 const MAX_SAMPLE_FRAME_BYTES = 450 * 1024;
 const MAX_SAMPLE_FRAME_TOTAL_BYTES = 52 * 1024 * 1024;
 const MAX_MARKETPLACE_PREVIEW_BYTES = 1_500_000;
+const MAX_MARKETPLACE_DEMO_BYTES = 2_500_000;
 const MAX_VENDOR_TOTAL_BYTES = 3 * 1024 * 1024;
 const REQUIRED_VENDOR_ENTRIES = [
   'extension/out/vendor/@jsquash/png/decode.js',
@@ -33,6 +34,8 @@ const ALLOWED_EXACT = new Set([
   'extension/changelog.md',
   'extension/media/icon.png',
   'extension/media/marketplace/codechan-view.png',
+  'extension/media/marketplace/demo-editor-cursor.gif',
+  'extension/media/marketplace/demo-pointer.gif',
   'extension/package.json',
   'extension/package.nls.ja.json',
   'extension/package.nls.json',
@@ -135,6 +138,16 @@ if (!marketplacePreview) {
 }
 if (marketplacePreview.uncompressedSize > MAX_MARKETPLACE_PREVIEW_BYTES) {
   fail(`Marketplace preview image is larger than the ${MAX_MARKETPLACE_PREVIEW_BYTES} byte budget: ${marketplacePreview.uncompressedSize}`);
+}
+for (const demoPath of [
+  'extension/media/marketplace/demo-editor-cursor.gif',
+  'extension/media/marketplace/demo-pointer.gif',
+]) {
+  const demo = zipEntries.get(demoPath);
+  if (!demo) fail(`missing ${demoPath}`);
+  if (demo.uncompressedSize > MAX_MARKETPLACE_DEMO_BYTES) {
+    fail(`${demoPath} is larger than the ${MAX_MARKETPLACE_DEMO_BYTES} byte budget: ${demo.uncompressedSize}`);
+  }
 }
 for (const walkthroughMedia of [
   'extension/media/walkthrough/open-companion-view.md',

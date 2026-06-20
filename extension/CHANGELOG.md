@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.3
+
+- Adds short Marketplace demo GIFs for pointer interaction and editor-cursor tracking.
+- Aligns the English and Japanese documentation with the Simplified Chinese reader-facing copy.
+- Clarifies VS Code gaze-tracking limitations and the quick gaze-lock steps.
+
 ## 0.5.2
 
 - Rewrites the Marketplace and repository README pages around a simpler reader-first product introduction.

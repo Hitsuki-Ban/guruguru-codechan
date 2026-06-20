@@ -20,6 +20,20 @@
       "sha256": "f0da47c88886dbf2f5be1f262585613af0c5b1d35e101d36107e62a4d52b2244"
     },
     {
+      "path": "media/marketplace/demo-pointer.gif",
+      "role": "marketplace-demo-animation",
+      "source": "User-provided VS Code usage recording, trimmed and optimized for documentation preview.",
+      "bytes": 1803996,
+      "sha256": "af9c45b0f35d3c7d9537428f9986ad1c8a30075ed2139d3c0137a693d68f5a87"
+    },
+    {
+      "path": "media/marketplace/demo-editor-cursor.gif",
+      "role": "marketplace-demo-animation",
+      "source": "User-provided VS Code usage recording, trimmed and optimized for documentation preview.",
+      "bytes": 1868611,
+      "sha256": "d9dccc614ecdb0a120d099f2ff73592ec408051e8c71f19410cb4fe6704d35af"
+    },
+    {
       "path": "media/sample-codechan/A/r0c0.webp",
       "role": "sample-frame",
       "sheet": "A",

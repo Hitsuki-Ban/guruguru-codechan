@@ -1,6 +1,6 @@
 {
   "extension.displayName": "Guruguru Codechan",
-  "extension.description": "Codeちゃんは見ている。ぐるぐる風キャラクターを VS Code 内に表示できるドッキング可能な相棒ビューです。",
+  "extension.description": "Codeちゃんは見ている。VS Code の中で静かに作業を見守るドッキング可能な相棒ビューです。",
   "views.container.title": "Guruguru Codechan",
   "views.codechan.name": "Codeちゃん",
   "commands.category": "Guruguru Codechan",
@@ -8,7 +8,7 @@
   "commands.switchCharacter.title": "キャラクターを切り替える",
   "commands.toggleSettings.title": "Codeちゃん設定を切り替える",
   "walkthrough.title": "Guruguru Codechan を始める",
-  "walkthrough.description": "ドッキング可能な Codeちゃんビューを開き、設定レイヤーを調整し、ローカルキャラクター素材を読み込みます。",
+  "walkthrough.description": "ドッキング可能な Codeちゃんビューを開き、視線で遊び、設定を調整し、ローカルキャラクター素材を読み込みます。",
   "walkthrough.open.title": "Codeちゃんビューを開く",
   "walkthrough.open.description": "コマンドパレットからドッキング可能な Codeちゃんビューを開きます。\n[Codeちゃんビューを開く](command:guruguru-codechan.openCanvas)",
   "walkthrough.settings.title": "設定とローカル素材を調整する",
