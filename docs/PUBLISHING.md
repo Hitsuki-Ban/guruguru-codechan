@@ -22,8 +22,8 @@ tests.
 4. Create and push a tag that exactly matches `extension/package.json`.
 
 ```bash
-git tag v0.5.9
-git push origin v0.5.9
+git tag v0.6.0
+git push origin v0.6.0
 ```
 
 The `Release VSIX` workflow verifies the tag, runs `pnpm verify:release`,

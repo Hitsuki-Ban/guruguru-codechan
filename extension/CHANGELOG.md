@@ -1,27 +1,13 @@
 # Changelog
 
-## 0.5.9
+## 0.6.0
 
-- Simplifies editor-cursor gaze tracking to stable four-direction movement after the pointer leaves the companion view.
-- Updates the settings action buttons with compact inline SVG icons for narrow companion views.
-- Removes the Webview icon font dependency so settings icons render consistently across environments.
-
-## 0.5.8
-
-- Improves editor-cursor gaze stability after the pointer leaves the companion view.
-- Keeps straight left/right exits on the outer animation columns and straight top/bottom exits on the outer rows.
-- Improves wrapped-line cursor position estimates for long editor lines.
-
-## 0.5.7
-
-- Adds a Tweaks panel with tracking range, tracking speed, keyboard mouth sync, and auto blink controls.
-- Improves Webview styling for VS Code light, dark, and high-contrast themes.
-
-## 0.5.6
-
-- Adds a settings toggle for keyboard-driven mouth sync.
+- Improves editor-cursor gaze tracking with stable four-direction movement after the pointer leaves the companion view.
+- Adds a Tweaks panel for tracking range, tracking speed, keyboard mouth sync, and auto blink.
+- Improves settings controls with compact inline SVG action icons, wheel scaling, and clearer narrow-view behavior.
 - Adds an optional setting to open the Codeちゃん view automatically after VS Code startup.
-- Updates release automation so patch builds stay as GitHub prerelease VSIX artifacts.
+- Improves light, dark, and high-contrast theme support for the companion view.
+- Improves packaging checks, release automation, and user-facing documentation for the public release.
 
 ## 0.5.5
 
