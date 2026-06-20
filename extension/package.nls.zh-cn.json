@@ -1,0 +1,18 @@
+{
+  "extension.displayName": "Guruguru Codechan",
+  "extension.description": "Codeちゃんは見ている。一个可停靠的 VS Code 伙伴视图，用来显示 guruguru 风格角色。",
+  "views.container.title": "Guruguru Codechan",
+  "views.codechan.name": "Codeちゃん",
+  "commands.category": "Guruguru Codechan",
+  "commands.openCanvas.title": "打开 Codeちゃん 视图",
+  "commands.switchCharacter.title": "切换角色",
+  "commands.toggleSettings.title": "切换 Codeちゃん 设置",
+  "walkthrough.title": "开始使用 Guruguru Codechan",
+  "walkthrough.description": "打开可停靠的 Codeちゃん 视图，调整设置层，并导入本地角色素材。",
+  "walkthrough.open.title": "打开 Codeちゃん 视图",
+  "walkthrough.open.description": "从命令面板打开可停靠的 Codeちゃん 视图。\n[打开 Codeちゃん 视图](command:guruguru-codechan.openCanvas)",
+  "walkthrough.settings.title": "调整设置和本地素材",
+  "walkthrough.settings.description": "在设置层中调整位置、缩放、视线锁定、导入和删除操作。\n[切换 Codeちゃん 设置](command:guruguru-codechan.toggleSettings)",
+  "walkthrough.rights.title": "确认角色素材权利",
+  "walkthrough.rights.description": "内置样本素材仅允许非商用。用户导入的素材遵循用户或授权方持有的权利。\n[阅读内置素材许可证](https://github.com/Hitsuki-Ban/guruguru-codechan/blob/main/extension/ASSET_LICENSE.md)"
+}

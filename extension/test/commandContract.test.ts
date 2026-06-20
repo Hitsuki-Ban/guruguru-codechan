@@ -5,6 +5,8 @@ import { describe, expect, it } from 'vitest';
 import { COMMAND_SURFACE_CONTRACT, COMMANDS } from '../src/commands';
 
 type ExtensionManifest = {
+  displayName?: string;
+  description?: string;
   activationEvents?: string[];
   contributes?: {
     commands?: Array<{ command: string; title: string; category?: string }>;
@@ -20,9 +22,11 @@ type ExtensionManifest = {
 
 const extensionRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const packageJson = JSON.parse(readFileSync(resolve(extensionRoot, 'package.json'), 'utf8')) as ExtensionManifest;
+const packageNls = JSON.parse(readFileSync(resolve(extensionRoot, 'package.nls.json'), 'utf8')) as Record<string, string>;
+const packageNlsJa = JSON.parse(readFileSync(resolve(extensionRoot, 'package.nls.ja.json'), 'utf8')) as Record<string, string>;
+const packageNlsZhCn = JSON.parse(readFileSync(resolve(extensionRoot, 'package.nls.zh-cn.json'), 'utf8')) as Record<string, string>;
 const extensionSource = readFileSync(resolve(extensionRoot, 'src', 'extension.ts'), 'utf8');
 const readme = readFileSync(resolve(extensionRoot, 'README.md'), 'utf8');
-const commandTable = readme.slice(readme.indexOf('## Commands'), readme.indexOf('## Asset Format'));
 
 function sorted(values: Iterable<string>): string[] {
   return [...values].sort((a, b) => a.localeCompare(b));
@@ -73,23 +77,42 @@ describe('command surface contract', () => {
     expect(panelContainers).toHaveLength(1);
     expect(panelContainers[0].id).toBe('guruguru-codechan-container');
     expect(panelContainers[0].id).toMatch(/^[A-Za-z0-9_-]+$/);
+    expect(panelContainers[0].title).toBe('%views.container.title%');
     expect(packageJson.contributes?.views?.[panelContainers[0].id]).toEqual([
       {
         type: 'webview',
         id: 'guruguru-codechan.codechanView',
-        name: 'Codeちゃん',
+        name: '%views.codechan.name%',
       },
     ]);
+    expect(packageNls['views.container.title']).toBe('Guruguru Codechan');
+    expect(packageNls['views.codechan.name']).toBe('Codeちゃん');
   });
 
-  it('documents only public command-palette entries in the command table', () => {
-    const documentedCommandIds = [...commandTable.matchAll(/^\| [^|]+ \| `(guruguru-codechan\.[^`]+)` \|$/gm)]
-      .map((match) => match[1]);
-    const expectedDocumentedCommands = COMMAND_SURFACE_CONTRACT
-      .filter((command) => command.readmeCommandTable)
-      .map((command) => command.id);
-    expect(sorted(documentedCommandIds)).toEqual(sorted(expectedDocumentedCommands));
-    expect(readme).toMatch(/Import and delete are settings-layer actions/i);
-    expect(readme).toMatch(/setMouthLevel.*integration-only/i);
+  it('keeps static manifest localization keys complete', () => {
+    const manifestText = JSON.stringify(packageJson);
+    const manifestKeys = [...manifestText.matchAll(/%([^%]+)%/g)].map((match) => match[1]);
+    const uniqueManifestKeys = new Set(manifestKeys);
+    for (const key of uniqueManifestKeys) {
+      expect(packageNls[key], key).toEqual(expect.any(String));
+      expect(packageNlsJa[key], key).toEqual(expect.any(String));
+      expect(packageNlsZhCn[key], key).toEqual(expect.any(String));
+    }
+    expect(sorted(Object.keys(packageNlsJa))).toEqual(sorted(Object.keys(packageNls)));
+    expect(sorted(Object.keys(packageNlsZhCn))).toEqual(sorted(Object.keys(packageNls)));
+    expect(packageJson.displayName).toBe('%extension.displayName%');
+    expect(packageJson.description).toBe('%extension.description%');
+  });
+
+  it('keeps the README focused on reader-facing setup and import flow', () => {
+    expect(readme).not.toMatch(/^## Commands$/m);
+    expect(readme).toMatch(/Codeちゃんは見ている。/);
+    expect(readme).toMatch(/Guruguru Codechan: Open Codechan View/);
+    expect(readme).toMatch(/Open settings from the view title/);
+    expect(readme).toMatch(/Click the import button/);
+    expect(readme).toMatch(/rotejin\/tomari-guruguru/);
+    expect(readme).not.toMatch(/guruguru-codechan\.importCharacter/);
+    expect(readme).not.toMatch(/guruguru-codechan\.deleteCharacter/);
+    expect(readme).not.toMatch(/guruguru-codechan\.setMouthLevel/);
   });
 });

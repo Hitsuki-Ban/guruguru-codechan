@@ -1,8 +1,8 @@
 {
   "name": "guruguru-codechan",
-  "displayName": "Guruguru Codechan",
-  "description": "Run Codeちゃん and importable guruguru-style character assets in a dockable VS Code view.",
-  "version": "0.5.1",
+  "displayName": "%extension.displayName%",
+  "description": "%extension.description%",
+  "version": "0.5.2",
   "publisher": "hitsuki-ban",
   "license": "SEE LICENSE IN LICENSE",
   "type": "commonjs",
@@ -51,6 +51,9 @@
     "SUPPORT.md",
     "ASSET_LICENSE.md",
     "ASSET_PROVENANCE.json",
+    "package.nls.json",
+    "package.nls.ja.json",
+    "package.nls.zh-cn.json",
     "package.json"
   ],
   "activationEvents": [
@@ -65,7 +68,7 @@
       "panel": [
         {
           "id": "guruguru-codechan-container",
-          "title": "Guruguru Codechan",
+          "title": "%views.container.title%",
           "icon": "media/icon.png"
         }
       ]
@@ -75,7 +78,7 @@
         {
           "type": "webview",
           "id": "guruguru-codechan.codechanView",
-          "name": "Codeちゃん"
+          "name": "%views.codechan.name%"
         }
       ]
     },
@@ -96,13 +99,13 @@
     "commands": [
       {
         "command": "guruguru-codechan.openCanvas",
-        "title": "Open Codechan View",
-        "category": "Guruguru Codechan"
+        "title": "%commands.openCanvas.title%",
+        "category": "%commands.category%"
       },
       {
         "command": "guruguru-codechan.switchCharacter",
-        "title": "Switch Character",
-        "category": "Guruguru Codechan",
+        "title": "%commands.switchCharacter.title%",
+        "category": "%commands.category%",
         "icon": {
           "dark": "media/actions/dark/switch.svg",
           "light": "media/actions/light/switch.svg"
@@ -110,21 +113,21 @@
       },
       {
         "command": "guruguru-codechan.toggleSettings",
-        "title": "Toggle Codechan Settings",
-        "category": "Guruguru Codechan",
+        "title": "%commands.toggleSettings.title%",
+        "category": "%commands.category%",
         "icon": "$(settings-gear)"
       }
     ],
     "walkthroughs": [
       {
         "id": "guruguru-codechan.gettingStarted",
-        "title": "Get Started with Guruguru Codechan",
-        "description": "Set up the dockable VS Code Codechan view, settings layer, and local character assets.",
+        "title": "%walkthrough.title%",
+        "description": "%walkthrough.description%",
         "steps": [
           {
             "id": "open-codechan-view",
-            "title": "Open the Codechan view",
-            "description": "Open the dockable Codechan view from the Command Palette.\n[Open Codechan View](command:guruguru-codechan.openCanvas)",
+            "title": "%walkthrough.open.title%",
+            "description": "%walkthrough.open.description%",
             "media": {
               "markdown": "media/walkthrough/open-companion-view.md"
             },
@@ -134,8 +137,8 @@
           },
           {
             "id": "adjust-settings-and-assets",
-            "title": "Tune settings and local assets",
-            "description": "Use the settings layer to adjust position, zoom, gaze lock, and import or delete local character assets.\n[Toggle Codechan Settings](command:guruguru-codechan.toggleSettings)",
+            "title": "%walkthrough.settings.title%",
+            "description": "%walkthrough.settings.description%",
             "media": {
               "markdown": "media/walkthrough/settings-and-assets.md"
             },
@@ -145,8 +148,8 @@
           },
           {
             "id": "confirm-asset-rights",
-            "title": "Confirm character asset rights",
-            "description": "Bundled sample assets are non-commercial. User-imported assets remain governed by the user's or licensor's rights.\n[Read bundled asset license](https://github.com/Hitsuki-Ban/guruguru-codechan/blob/main/extension/ASSET_LICENSE.md)",
+            "title": "%walkthrough.rights.title%",
+            "description": "%walkthrough.rights.description%",
             "media": {
               "markdown": "media/walkthrough/asset-rights.md"
             },

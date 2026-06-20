@@ -1,0 +1,18 @@
+{
+  "extension.displayName": "Guruguru Codechan",
+  "extension.description": "Codeちゃんは見ている。ぐるぐる風キャラクターを VS Code 内に表示できるドッキング可能な相棒ビューです。",
+  "views.container.title": "Guruguru Codechan",
+  "views.codechan.name": "Codeちゃん",
+  "commands.category": "Guruguru Codechan",
+  "commands.openCanvas.title": "Codeちゃんビューを開く",
+  "commands.switchCharacter.title": "キャラクターを切り替える",
+  "commands.toggleSettings.title": "Codeちゃん設定を切り替える",
+  "walkthrough.title": "Guruguru Codechan を始める",
+  "walkthrough.description": "ドッキング可能な Codeちゃんビューを開き、設定レイヤーを調整し、ローカルキャラクター素材を読み込みます。",
+  "walkthrough.open.title": "Codeちゃんビューを開く",
+  "walkthrough.open.description": "コマンドパレットからドッキング可能な Codeちゃんビューを開きます。\n[Codeちゃんビューを開く](command:guruguru-codechan.openCanvas)",
+  "walkthrough.settings.title": "設定とローカル素材を調整する",
+  "walkthrough.settings.description": "設定レイヤーで位置、拡大率、視線固定、インポート、削除を操作します。\n[Codeちゃん設定を切り替える](command:guruguru-codechan.toggleSettings)",
+  "walkthrough.rights.title": "キャラクター素材の権利を確認する",
+  "walkthrough.rights.description": "付属サンプル素材は非商用のみです。ユーザーが読み込む素材は、ユーザー本人またはライセンス元の権利に従います。\n[付属素材ライセンスを読む](https://github.com/Hitsuki-Ban/guruguru-codechan/blob/main/extension/ASSET_LICENSE.md)"
+}

@@ -1,0 +1,18 @@
+{
+  "extension.displayName": "Guruguru Codechan",
+  "extension.description": "Codeちゃんは見ている。 A dockable VS Code companion for guruguru-style characters.",
+  "views.container.title": "Guruguru Codechan",
+  "views.codechan.name": "Codeちゃん",
+  "commands.category": "Guruguru Codechan",
+  "commands.openCanvas.title": "Open Codechan View",
+  "commands.switchCharacter.title": "Switch Character",
+  "commands.toggleSettings.title": "Toggle Codechan Settings",
+  "walkthrough.title": "Get Started with Guruguru Codechan",
+  "walkthrough.description": "Open the dockable Codeちゃん view, adjust the settings layer, and import local character assets.",
+  "walkthrough.open.title": "Open the Codeちゃん view",
+  "walkthrough.open.description": "Open the dockable Codeちゃん view from the Command Palette.\n[Open Codechan View](command:guruguru-codechan.openCanvas)",
+  "walkthrough.settings.title": "Adjust settings and local assets",
+  "walkthrough.settings.description": "Use the settings layer to adjust position, scale, gaze lock, import, and delete actions.\n[Toggle Codechan Settings](command:guruguru-codechan.toggleSettings)",
+  "walkthrough.rights.title": "Confirm character asset rights",
+  "walkthrough.rights.description": "Bundled sample assets are non-commercial. User-imported assets remain governed by the user's or licensor's rights.\n[Read bundled asset license](https://github.com/Hitsuki-Ban/guruguru-codechan/blob/main/extension/ASSET_LICENSE.md)"
+}

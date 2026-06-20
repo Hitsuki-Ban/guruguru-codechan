@@ -14,7 +14,6 @@ export type CommandSurfaceContract = {
   readonly activationEvent: boolean;
   readonly contributed: boolean;
   readonly viewTitle: boolean;
-  readonly readmeCommandTable: boolean;
 };
 
 export const COMMAND_SURFACE_CONTRACT: readonly CommandSurfaceContract[] = [
@@ -23,41 +22,35 @@ export const COMMAND_SURFACE_CONTRACT: readonly CommandSurfaceContract[] = [
     activationEvent: true,
     contributed: true,
     viewTitle: false,
-    readmeCommandTable: true,
   },
   {
     id: COMMANDS.importCharacter,
     activationEvent: false,
     contributed: false,
     viewTitle: false,
-    readmeCommandTable: false,
   },
   {
     id: COMMANDS.switchCharacter,
     activationEvent: true,
     contributed: true,
     viewTitle: true,
-    readmeCommandTable: true,
   },
   {
     id: COMMANDS.deleteCharacter,
     activationEvent: false,
     contributed: false,
     viewTitle: false,
-    readmeCommandTable: false,
   },
   {
     id: COMMANDS.toggleSettings,
     activationEvent: true,
     contributed: true,
     viewTitle: true,
-    readmeCommandTable: true,
   },
   {
     id: COMMANDS.setMouthLevel,
     activationEvent: true,
     contributed: false,
     viewTitle: false,
-    readmeCommandTable: false,
   },
 ] as const;
