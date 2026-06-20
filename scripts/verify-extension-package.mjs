@@ -8,7 +8,6 @@ const EXPECTED_SAMPLE_FRAMES = 150;
 const MAX_PACKAGE_BYTES = 60 * 1024 * 1024;
 const MAX_WEBVIEW_JS_BYTES = 180 * 1024;
 const MAX_WEBVIEW_CSS_BYTES = 8 * 1024;
-const MAX_WEBVIEW_FONT_BYTES = 160 * 1024;
 const MAX_SAMPLE_FRAME_BYTES = 450 * 1024;
 const MAX_SAMPLE_FRAME_TOTAL_BYTES = 52 * 1024 * 1024;
 const MAX_MARKETPLACE_PREVIEW_BYTES = 1_500_000;
@@ -44,7 +43,6 @@ const ALLOWED_EXACT = new Set([
   'extension/readme.md',
   'extension/SUPPORT.md',
   'extension/dist/webview/webview.css',
-  'extension/dist/webview/codicon.ttf',
   'extension/dist/webview/webview.js',
   'extension/out/assetValidation.js',
   'extension/out/characterRegistry.js',
@@ -187,11 +185,6 @@ const webviewStyle = zipEntries.get('extension/dist/webview/webview.css');
 if (!webviewStyle) fail('missing extension/dist/webview/webview.css');
 if (webviewStyle.uncompressedSize > MAX_WEBVIEW_CSS_BYTES) {
   fail(`webview.css is larger than the ${MAX_WEBVIEW_CSS_BYTES} byte budget: ${webviewStyle.uncompressedSize}`);
-}
-const webviewFont = zipEntries.get('extension/dist/webview/codicon.ttf');
-if (!webviewFont) fail('missing extension/dist/webview/codicon.ttf');
-if (webviewFont.uncompressedSize > MAX_WEBVIEW_FONT_BYTES) {
-  fail(`codicon.ttf is larger than the ${MAX_WEBVIEW_FONT_BYTES} byte budget: ${webviewFont.uncompressedSize}`);
 }
 
 const sampleEntries = sampleFrames.map((entry) => zipEntries.get(entry));

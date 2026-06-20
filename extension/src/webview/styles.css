@@ -14,35 +14,6 @@ body {
   overscroll-behavior: none;
 }
 
-@font-face {
-  font-family: codicon;
-  font-display: block;
-  src: url('@vscode/codicons/dist/codicon.ttf') format('truetype');
-}
-
-.codicon {
-  display: inline-block;
-  font-family: codicon;
-  font-style: normal;
-  font-weight: normal;
-  text-align: center;
-  text-decoration: none;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-}
-
-.codicon-folder-opened::before {
-  content: "\eaf7";
-}
-
-.codicon-trash::before {
-  content: "\ea81";
-}
-
-.codicon-settings-gear::before {
-  content: "\eb51";
-}
-
 button {
   border: 1px solid var(--vscode-button-border, transparent);
   border-radius: 6px;
@@ -309,8 +280,9 @@ button:active {
 
 .assetIcon {
   flex: 0 0 auto;
-  font-size: 14px;
-  line-height: 1;
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
 }
 
 .assetText {

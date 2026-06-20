@@ -42,15 +42,16 @@ describe('webview settings accessibility', () => {
     expect(webviewStyles).toMatch(/transition:\s*none/);
   });
 
-  it('uses VS Code product-style icons with compact labels for settings actions', () => {
-    for (const icon of [
-      'codicon-folder-opened',
-      'codicon-trash',
-      'codicon-settings-gear',
-    ]) {
-      expect(webviewSource).toContain(icon);
+  it('uses inline SVG action icons with compact labels for settings actions', () => {
+    expect(webviewSource).toContain('function ActionIcon');
+    for (const icon of ['import', 'delete', 'tweaks']) {
+      expect(webviewSource).toContain(`name="${icon}"`);
     }
+    expect(webviewSource).toContain('className="assetIcon"');
     expect(webviewSource).toContain('className="assetText"');
+    expect(webviewSource).not.toContain('codicon-');
+    expect(webviewSource).not.toContain('@vscode/codicons');
+    expect(webviewStyles).not.toMatch(/@font-face/);
     expect(webviewStyles).toMatch(/\.assetText\s*{/);
     expect(webviewStyles).toMatch(/@media\s*\(max-width:\s*360px\)[\s\S]*\.assetText\s*{[\s\S]*display:\s*none/);
   });

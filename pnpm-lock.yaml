@@ -23,9 +23,6 @@ importers:
       '@jsquash/webp':
         specifier: 1.5.0
         version: 1.5.0
-      '@vscode/codicons':
-        specifier: 0.0.45
-        version: 0.0.45
       wasm-feature-detect:
         specifier: 1.8.0
         version: 1.8.0
@@ -702,9 +699,6 @@ packages:
 
   '@vitest/utils@3.2.6':
     resolution: {integrity: sha512-lI23nIs4bnT3T8NIoh+vFaz5s2/DdP0Jgt2jxwgWljvwn82cLJtyi/If+fjFyoLMGIOz0U/fKvWE0d4jsNQEfg==}
-
-  '@vscode/codicons@0.0.45':
-    resolution: {integrity: sha512-1KAZ7XCMagp5Gdrlr4bbbcAqgcIL623iO1wW6rfcSVGAVUQvR0WP7bQx1SbJ11gmV3fdQTSEFIJQ/5C+HuVasw==}
 
   '@vscode/test-electron@3.0.0':
     resolution: {integrity: sha512-TY5mC7aAjxSLDXsyjhrG8cJHgc/HLdiE5lvtW7hABYQrY24Qwozzr5UoO3HiuAM4Hzz4b7K/eZlwrCILj94CcA==}
@@ -2613,8 +2607,6 @@ snapshots:
       '@vitest/pretty-format': 3.2.6
       loupe: 3.2.1
       tinyrainbow: 2.0.0
-
-  '@vscode/codicons@0.0.45': {}
 
   '@vscode/test-electron@3.0.0':
     dependencies:

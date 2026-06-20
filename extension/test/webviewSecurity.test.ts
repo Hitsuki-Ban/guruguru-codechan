@@ -20,7 +20,7 @@ describe('Webview security boundary', () => {
     expect(panelSource).toContain('"form-action \'none\'"');
     expect(panelSource).toContain('`img-src ${webview.cspSource} data:`');
     expect(panelSource).toContain('`style-src ${webview.cspSource} \'unsafe-inline\'`');
-    expect(panelSource).toContain('`font-src ${webview.cspSource}`');
+    expect(panelSource).not.toMatch(/font-src/);
     expect(panelSource).toContain("`script-src 'nonce-${nonce}'`");
     expect(panelSource).not.toMatch(/https?:/);
   });

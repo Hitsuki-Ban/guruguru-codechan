@@ -2,7 +2,8 @@
 
 **Codeちゃんは見ている。**
 
-Guruguru Codechan 是一个 VS Code 扩展，会在工作区里添加一个可停靠的 Codeちゃん 伙伴窗口。
+Guruguru Codechan 是一个 VS Code 扩展，会在工作区里添加一个可停靠的
+Codeちゃん 伙伴窗口。
 Codeちゃん 会眨眼，静静看着你工作，并在鼠标接近她时用视线追随你。
 
 在工作累了的时候陪 Codeちゃん 玩一玩治愈一下吧。
@@ -32,7 +33,9 @@ Codeちゃん 会眨眼，静静看着你工作，并在鼠标接近她时用视
 
 ## 安装
 
-可以从 [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=hitsuki-ban.guruguru-codechan) 安装 Guruguru Codechan。
+可以从
+[Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=hitsuki-ban.guruguru-codechan)
+安装 Guruguru Codechan。
 如果需要 VSIX，也可以从 [GitHub Releases](https://github.com/Hitsuki-Ban/guruguru-codechan/releases) 下载。
 
 安装后，从命令面板执行 `Guruguru Codechan: Open Codechan View`。
@@ -81,13 +84,19 @@ VS Code 不向扩展暴露全局鼠标坐标，也不提供所有工作区面板
 ### 简易问题指南
 
 #### > Codeちゃん 在编辑器视图中没有追随正确的方向
-- 尝试用鼠标诱导一次她的视线后再回到编辑器中，Codeちゃん 是通过你的鼠标上一次退出的方向来推测编辑器的位置的。
+
+尝试用鼠标诱导一次她的视线后再回到编辑器中。
+Codeちゃん 是通过你的鼠标上一次退出的方向来推测编辑器的位置的。
 
 #### > 我想让 Codeちゃん 只看固定方向
-- 点击设置按钮，然后在扩展窗口的空白画布中点击左键，点击出现的 `Lock Gaze` 按钮就可以锁定 Codeちゃん 的视线。
+
+点击设置按钮，然后在扩展窗口的空白画布中点击左键。
+点击出现的 `Lock Gaze` 按钮就可以锁定 Codeちゃん 的视线。
 
 #### > 我在使用中遇到了其他问题
-- 欢迎使用 [GitHub Issues](https://github.com/Hitsuki-Ban/guruguru-codechan/issues) 报告问题。
+
+欢迎使用 [GitHub Issues](https://github.com/Hitsuki-Ban/guruguru-codechan/issues)
+报告问题。
 
 ## 致谢和许可证
 
