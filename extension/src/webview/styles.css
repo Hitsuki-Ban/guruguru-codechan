@@ -88,7 +88,8 @@ button:active {
 
 .triangleButton,
 .assetButton,
-.mouthSyncToggle,
+.tweaksPanel,
+.tweakToggle,
 .settingsButton,
 .gazeLockMarker {
   border-color: color-mix(in srgb, var(--vscode-panel-border) 86%, transparent);
@@ -101,7 +102,7 @@ button:active {
 
 .triangleButton:hover,
 .assetButton:hover,
-.mouthSyncToggle:hover,
+.tweakToggle:hover,
 .settingsButton:hover,
 .gazeLockMarker:hover {
   border-color: var(--vscode-focusBorder);
@@ -110,7 +111,8 @@ button:active {
 
 .triangleButton:focus-visible,
 .assetButton:focus-visible,
-.mouthSyncInput:focus-visible,
+.tweakSlider:focus-visible,
+.tweakCheckbox:focus-visible,
 .settingsButton:focus-visible,
 .gazeLockMarker:focus-visible,
 .zoomSlider:focus-visible {
@@ -214,10 +216,19 @@ button:active {
   right: 16px;
   top: 12px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   gap: 8px;
-  max-width: calc(100% - 24px);
+  width: min(220px, calc(100% - 84px));
   pointer-events: auto;
+}
+
+.assetButtonRow {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  width: 100%;
 }
 
 .characterName {
@@ -256,46 +267,77 @@ button:active {
   transform: translateY(1px) scale(0.94);
 }
 
+.tweaksButton {
+  align-self: flex-end;
+  min-width: 74px;
+}
+
+.tweaksButton.active {
+  border-color: var(--vscode-focusBorder);
+  color: var(--vscode-editor-foreground);
+  opacity: 1;
+}
+
 .assetLabel {
   font-size: 11px;
   line-height: 1;
 }
 
-.mouthSyncToggle {
-  position: absolute;
-  left: 72px;
-  bottom: 10px;
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  min-height: 28px;
-  max-width: min(154px, calc(100% - 164px));
-  padding: 0 9px;
+.tweaksPanel {
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
   border: 1px solid color-mix(in srgb, var(--vscode-panel-border) 86%, transparent);
-  border-radius: 999px;
-  opacity: 0.84;
-  pointer-events: auto;
+  border-radius: 8px;
+  opacity: 0.96;
 }
 
-.mouthSyncToggle:hover {
+.tweakField {
+  display: grid;
+  gap: 6px;
+}
+
+.tweakHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  color: color-mix(in srgb, var(--vscode-editor-foreground) 76%, transparent);
+  font-size: 11px;
+  line-height: 1.15;
+}
+
+.tweakSlider {
+  width: 100%;
+  accent-color: var(--vscode-focusBorder);
+}
+
+.tweakToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 28px;
+  padding: 0 8px;
+  border: 1px solid color-mix(in srgb, var(--vscode-panel-border) 86%, transparent);
+  border-radius: 7px;
+  color: color-mix(in srgb, var(--vscode-editor-foreground) 76%, transparent);
+  font-size: 11px;
+  line-height: 1;
+  opacity: 0.88;
+}
+
+.tweakToggle:hover {
   color: var(--vscode-editor-foreground);
   opacity: 1;
 }
 
-.mouthSyncInput {
+.tweakCheckbox {
   width: 13px;
   height: 13px;
   margin: 0;
   accent-color: var(--vscode-focusBorder);
-}
-
-.mouthSyncLabel {
-  overflow: hidden;
-  color: color-mix(in srgb, var(--vscode-editor-foreground) 72%, transparent);
-  font-size: 11px;
-  line-height: 1;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .settingsButton {
@@ -338,6 +380,7 @@ button:active {
 @media (max-width: 300px) {
   .assetTools {
     gap: 5px;
+    width: min(184px, calc(100% - 76px));
   }
 
   .assetButton {
@@ -345,8 +388,9 @@ button:active {
     padding: 0 8px;
   }
 
-  .mouthSyncToggle {
-    display: none;
+  .tweaksPanel {
+    padding: 8px;
+    gap: 8px;
   }
 
   .characterName {
@@ -354,10 +398,36 @@ button:active {
   }
 }
 
+body.vscode-high-contrast .stage {
+  background: var(--vscode-editor-background);
+}
+
+body.vscode-high-contrast .triangleButton,
+body.vscode-high-contrast .assetButton,
+body.vscode-high-contrast .tweaksPanel,
+body.vscode-high-contrast .tweakToggle,
+body.vscode-high-contrast .settingsButton,
+body.vscode-high-contrast .gazeLockMarker {
+  border-color: var(--vscode-contrastBorder);
+  background: var(--vscode-editor-background);
+  box-shadow: none;
+}
+
+body.vscode-high-contrast .triangleButton:focus-visible,
+body.vscode-high-contrast .assetButton:focus-visible,
+body.vscode-high-contrast .tweakSlider:focus-visible,
+body.vscode-high-contrast .tweakCheckbox:focus-visible,
+body.vscode-high-contrast .settingsButton:focus-visible,
+body.vscode-high-contrast .gazeLockMarker:focus-visible,
+body.vscode-high-contrast .zoomSlider:focus-visible {
+  outline-color: var(--vscode-contrastActiveBorder);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .triangleButton,
   .assetButton,
-  .mouthSyncToggle,
+  .tweaksPanel,
+  .tweakToggle,
   .settingsButton,
   .gazeLockMarker {
     transition: none;

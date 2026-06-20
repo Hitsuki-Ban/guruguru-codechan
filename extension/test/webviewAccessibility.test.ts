@@ -16,13 +16,24 @@ describe('webview settings accessibility', () => {
       'Move down',
       'Import character',
       'Delete character',
+      'Open tweaks',
       'Lock gaze',
       'Unlock gaze',
       'Zoom companion',
+      'Tracking range',
+      'Tracking speed',
       'Sync mouth with typing',
+      'Auto blink',
     ]) {
       expect(webviewSource).toContain(`aria-label="${label}"`);
     }
+  });
+
+  it('keeps high-contrast theme styling explicit', () => {
+    expect(webviewStyles).toMatch(/body\.vscode-high-contrast/);
+    expect(webviewStyles).toMatch(/--vscode-contrastBorder/);
+    expect(webviewStyles).toMatch(/--vscode-contrastActiveBorder/);
+    expect(webviewStyles).toMatch(/--vscode-editor-background/);
   });
 
   it('keeps keyboard focus and reduced-motion styles explicit', () => {

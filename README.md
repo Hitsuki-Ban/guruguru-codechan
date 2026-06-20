@@ -27,7 +27,7 @@ English | [日本語](./docs/i18n/README.ja.md) | [简体中文](./docs/i18n/REA
 
 - Shows Codeちゃん in a dockable VS Code view.
 - Codeちゃん follows the pointer inside the view and the editor cursor when VS Code exposes enough information.
-- Lets you adjust position, scale, gaze lock, and mouth sync from settings.
+- Lets you adjust position, scale, gaze lock, tracking range, tracking speed, mouth sync, and auto blink from settings.
 - Lets you import your own 150-frame guruguru-style character assets.
 
 ## Install

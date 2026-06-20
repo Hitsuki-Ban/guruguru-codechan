@@ -72,10 +72,10 @@ export function editorCursorFocusVector(exitVector: FocusVector, localX: number,
   return normalizeFocusVector(crossAxis(x, VERTICAL_CROSS_AXIS_LIMIT), preserveStrongExitDepth(exit.y, primary));
 }
 
-export function pointerFocusVector(rect: RectLike, point: PointLike): FocusVector {
+export function pointerFocusVector(rect: RectLike, point: PointLike, rangePx?: number): FocusVector {
   const anchorX = rect.left + rect.width * 0.5;
   const anchorY = rect.top + rect.height * POINTER_GAZE_Y_RATIO;
-  const range = Math.max(1, rect.width * POINTER_RANGE_RATIO);
+  const range = Math.max(1, rangePx ?? rect.width * POINTER_RANGE_RATIO);
   return normalizeFocusVector((point.x - anchorX) / range, (point.y - anchorY) / range);
 }
 

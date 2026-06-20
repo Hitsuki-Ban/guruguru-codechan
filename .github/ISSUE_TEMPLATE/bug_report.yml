@@ -11,8 +11,8 @@ body:
     id: extension-version
     attributes:
       label: Guruguru Codechan version
-      description: Example: 0.5.6.
-      placeholder: "0.5.6"
+      description: Example: 0.5.7.
+      placeholder: "0.5.7"
     validations:
       required: true
   - type: input
@@ -20,7 +20,7 @@ body:
     attributes:
       label: Install source / VSIX or Marketplace version
       description: Tell us whether this came from the Visual Studio Marketplace, a GitHub Release VSIX, or a local build.
-      placeholder: "GitHub Release VSIX v0.5.6"
+      placeholder: "GitHub Release VSIX v0.5.7"
     validations:
       required: true
   - type: input

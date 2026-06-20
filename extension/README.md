@@ -27,7 +27,7 @@ English | [日本語](https://github.com/Hitsuki-Ban/guruguru-codechan/blob/main
 
 - A dockable VS Code view for Codeちゃん.
 - Pointer and editor-cursor gaze tracking where VS Code exposes enough information.
-- A settings layer for position, scale, gaze lock, keyboard mouth sync, character import, and character deletion.
+- A settings layer for position, scale, gaze lock, tracking tweaks, character import, and character deletion.
 - A bundled non-commercial sample character.
 - Local custom character import.
 
@@ -36,7 +36,7 @@ English | [日本語](https://github.com/Hitsuki-Ban/guruguru-codechan/blob/main
 1. Install the extension.
 2. Run `Guruguru Codechan: Open Codechan View` from the Command Palette.
 3. Use the view title buttons to switch characters or open settings.
-4. In settings mode, move Codeちゃん with the arrow controls, scale with the slider or mouse wheel, toggle mouth sync, or click the empty canvas to lock the gaze direction.
+4. In settings mode, move Codeちゃん with the arrow controls, scale with the slider or mouse wheel, open Tweaks for tracking and animation options, or click the empty canvas to lock the gaze direction.
 
 To open the view automatically after VS Code starts, enable `Guruguru Codechan: Open On Startup` in Settings.
 

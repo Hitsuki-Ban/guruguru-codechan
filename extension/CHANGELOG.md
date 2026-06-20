@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.7
+
+- Adds a Tweaks panel with tracking range, tracking speed, keyboard mouth sync, and auto blink controls.
+- Improves Webview styling for VS Code light, dark, and high-contrast themes.
+
 ## 0.5.6
 
 - Adds a settings toggle for keyboard-driven mouth sync.

@@ -1,7 +1,14 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { pointerFocusVector } from '../focusTarget';
-import { MAX_LAYOUT_SCALE, MIN_LAYOUT_SCALE } from '../layout';
+import {
+  MAX_LAYOUT_SCALE,
+  MAX_TRACKING_RANGE,
+  MAX_TRACKING_SPEED,
+  MIN_LAYOUT_SCALE,
+  MIN_TRACKING_RANGE,
+  MIN_TRACKING_SPEED,
+} from '../layout';
 import type {
   CompanionLayout,
   CompanionStateSnapshot,
@@ -137,8 +144,9 @@ function App() {
         animationFrame.current = 0;
         return;
       }
-      current.current.x += dx * 0.3;
-      current.current.y += dy * 0.3;
+      const speed = stateRef.current?.layout.trackingSpeed ?? 0.3;
+      current.current.x += dx * speed;
+      current.current.y += dy * speed;
       commitCellFromCurrent();
       animationFrame.current = requestAnimationFrame(tick);
     };
@@ -224,7 +232,13 @@ function App() {
     return () => window.removeEventListener('message', onMessage);
   }, [persistWebviewState, targetFocusVector]);
 
+  const autoBlink = state?.layout.autoBlink ?? true;
+
   React.useEffect(() => {
+    if (!autoBlink) {
+      setBlink(false);
+      return;
+    }
     let alive = true;
     let timer = 0;
     const rand = (min: number, max: number) => min + Math.random() * (max - min);
@@ -258,7 +272,7 @@ function App() {
       alive = false;
       window.clearTimeout(timer);
     };
-  }, []);
+  }, [autoBlink]);
 
   const activeSheet = sheetFor(blink, mouthLevel);
   const requestedFrameSrc = state ? frameSrc(state, activeSheet, cell) : undefined;
@@ -326,10 +340,11 @@ function App() {
   const gazeLockAtPoint = React.useCallback((clientX: number, clientY: number): GazeLock | undefined => {
     const stage = stageRef.current;
     const pet = petRef.current;
-    if (!stage || !pet) return undefined;
+    const snapshot = stateRef.current;
+    if (!stage || !pet || !snapshot) return undefined;
     const stageRect = stage.getBoundingClientRect();
     const petRect = pet.getBoundingClientRect();
-    const vector = pointerFocusVector(petRect, { x: clientX, y: clientY });
+    const vector = pointerFocusVector(petRect, { x: clientX, y: clientY }, snapshot.layout.trackingRange);
     return {
       x: clamp(((clientX - stageRect.left) / Math.max(1, stageRect.width)) * 100, 0, 100),
       y: clamp(((clientY - stageRect.top) / Math.max(1, stageRect.height)) * 100, 0, 100),
@@ -344,7 +359,11 @@ function App() {
     if (!snapshot || !pet) return;
     pointerInside.current = true;
     if (snapshot.layout.gazeLock) return;
-    target.current = pointerFocusVector(pet.getBoundingClientRect(), { x: event.clientX, y: event.clientY });
+    target.current = pointerFocusVector(
+      pet.getBoundingClientRect(),
+      { x: event.clientX, y: event.clientY },
+      snapshot.layout.trackingRange,
+    );
     startTracking();
   }, [startTracking]);
 
@@ -361,7 +380,11 @@ function App() {
       return;
     }
     if (pet) {
-      const vector = pointerFocusVector(pet.getBoundingClientRect(), { x: event.clientX, y: event.clientY });
+      const vector = pointerFocusVector(
+        pet.getBoundingClientRect(),
+        { x: event.clientX, y: event.clientY },
+        snapshot?.layout.trackingRange,
+      );
       vscode.postMessage({ type: 'viewPointerExit', x: vector.x, y: vector.y });
       targetFocusVector(vector.x, vector.y);
     }
@@ -451,6 +474,15 @@ function App() {
           onMouthSync={(mouthSync) => {
             applyLayout({ ...layout, mouthSync }, true);
           }}
+          onTrackingRange={(trackingRange) => {
+            applyLayout({ ...layout, trackingRange }, true);
+          }}
+          onTrackingSpeed={(trackingSpeed) => {
+            applyLayout({ ...layout, trackingSpeed }, true);
+          }}
+          onAutoBlink={(autoBlink) => {
+            applyLayout({ ...layout, autoBlink }, true);
+          }}
           onImport={() => vscode.postMessage({ type: 'importCharacter' })}
           onDelete={() => vscode.postMessage({ type: 'deleteCharacter' })}
         />
@@ -492,15 +524,31 @@ function App() {
   );
 }
 
-function SettingsOverlay({ currentCharacterName, layout, onNudge, onScale, onMouthSync, onImport, onDelete }: {
+function SettingsOverlay({
+  currentCharacterName,
+  layout,
+  onNudge,
+  onScale,
+  onMouthSync,
+  onTrackingRange,
+  onTrackingSpeed,
+  onAutoBlink,
+  onImport,
+  onDelete,
+}: {
   currentCharacterName: string;
   layout: CompanionLayout;
   onNudge(dx: number, dy: number): void;
   onScale(scale: number): void;
   onMouthSync(enabled: boolean): void;
+  onTrackingRange(range: number): void;
+  onTrackingSpeed(speed: number): void;
+  onAutoBlink(enabled: boolean): void;
   onImport(): void;
   onDelete(): void;
 }) {
+  const [tweaksOpen, setTweaksOpen] = React.useState(false);
+
   return (
     <div className="settingsUi" aria-label="Companion settings">
       <button className="triangleButton moveButton moveUp" type="button" title="Move up" aria-label="Move up" onClick={() => onNudge(0, -2)}>↑</button>
@@ -523,23 +571,85 @@ function SettingsOverlay({ currentCharacterName, layout, onNudge, onScale, onMou
       </label>
 
       <div className="assetTools">
-        <button className="assetButton importButton" type="button" title="Import character" aria-label="Import character" onClick={onImport}>
-          <span className="assetLabel">Import</span>
+        <div className="assetButtonRow">
+          <button className="assetButton importButton" type="button" title="Import character" aria-label="Import character" onClick={onImport}>
+            <span className="assetLabel">Import</span>
+          </button>
+          <button className="assetButton deleteButton" type="button" title="Delete character" aria-label="Delete character" onClick={onDelete}>
+            <span className="assetLabel">Delete</span>
+          </button>
+        </div>
+        <button
+          className={`assetButton tweaksButton ${tweaksOpen ? 'active' : ''}`}
+          type="button"
+          title="Open tweaks"
+          aria-label="Open tweaks"
+          aria-expanded={tweaksOpen}
+          onClick={() => setTweaksOpen((open) => !open)}
+        >
+          <span className="assetLabel">Tweaks</span>
         </button>
-        <button className="assetButton deleteButton" type="button" title="Delete character" aria-label="Delete character" onClick={onDelete}>
-          <span className="assetLabel">Delete</span>
-        </button>
+
+        {tweaksOpen && (
+          <div className="tweaksPanel" aria-label="Tweaks">
+            <label className="tweakField">
+              <span className="tweakHeader">
+                <span>Tracking range</span>
+                <span>{layout.trackingRange}px</span>
+              </span>
+              <input
+                className="tweakSlider"
+                type="range"
+                min={MIN_TRACKING_RANGE}
+                max={MAX_TRACKING_RANGE}
+                step="10"
+                value={layout.trackingRange}
+                aria-label="Tracking range"
+                onChange={(event) => onTrackingRange(Number(event.currentTarget.value))}
+              />
+            </label>
+
+            <label className="tweakField">
+              <span className="tweakHeader">
+                <span>Tracking speed</span>
+                <span>{layout.trackingSpeed.toFixed(2)}</span>
+              </span>
+              <input
+                className="tweakSlider"
+                type="range"
+                min={MIN_TRACKING_SPEED}
+                max={MAX_TRACKING_SPEED}
+                step="0.01"
+                value={layout.trackingSpeed}
+                aria-label="Tracking speed"
+                onChange={(event) => onTrackingSpeed(Number(event.currentTarget.value))}
+              />
+            </label>
+
+            <label className="tweakToggle">
+              <input
+                className="tweakCheckbox"
+                type="checkbox"
+                checked={layout.mouthSync}
+                aria-label="Sync mouth with typing"
+                onChange={(event) => onMouthSync(event.currentTarget.checked)}
+              />
+              <span>Typing mouth sync</span>
+            </label>
+
+            <label className="tweakToggle">
+              <input
+                className="tweakCheckbox"
+                type="checkbox"
+                checked={layout.autoBlink}
+                aria-label="Auto blink"
+                onChange={(event) => onAutoBlink(event.currentTarget.checked)}
+              />
+              <span>Auto blink</span>
+            </label>
+          </div>
+        )}
       </div>
-      <label className="mouthSyncToggle" title="Sync mouth with typing">
-        <input
-          className="mouthSyncInput"
-          type="checkbox"
-          checked={layout.mouthSync}
-          aria-label="Sync mouth with typing"
-          onChange={(event) => onMouthSync(event.currentTarget.checked)}
-        />
-        <span className="mouthSyncLabel">Mouth sync</span>
-      </label>
       <span className="characterName" title={currentCharacterName}>{currentCharacterName}</span>
     </div>
   );

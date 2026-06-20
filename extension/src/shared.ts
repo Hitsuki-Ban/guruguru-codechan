@@ -28,6 +28,9 @@ export interface CompanionLayout {
   y: number;
   scale: number;
   mouthSync: boolean;
+  trackingRange: number;
+  trackingSpeed: number;
+  autoBlink: boolean;
   gazeLock?: GazeLock;
 }
 

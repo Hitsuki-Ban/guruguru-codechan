@@ -2,12 +2,19 @@ import type { CompanionLayout, GazeLock } from './shared';
 
 export const MIN_LAYOUT_SCALE = 0.24;
 export const MAX_LAYOUT_SCALE = 1.6;
+export const MIN_TRACKING_RANGE = 120;
+export const MAX_TRACKING_RANGE = 1200;
+export const MIN_TRACKING_SPEED = 0.04;
+export const MAX_TRACKING_SPEED = 0.5;
 
 export const DEFAULT_LAYOUT: CompanionLayout = {
   x: 50,
   y: 50,
   scale: 0.62,
   mouthSync: false,
+  trackingRange: 340,
+  trackingSpeed: 0.3,
+  autoBlink: true,
 };
 
 export class LayoutValidationError extends Error {
@@ -24,6 +31,9 @@ export function validateCompanionLayout(value: unknown): CompanionLayout {
     y: finiteNumberInRange(value.y, 'y', 0, 100),
     scale: finiteNumberInRange(value.scale, 'scale', MIN_LAYOUT_SCALE, MAX_LAYOUT_SCALE),
     mouthSync: booleanField(value.mouthSync, 'mouthSync'),
+    trackingRange: finiteNumberInRange(value.trackingRange, 'trackingRange', MIN_TRACKING_RANGE, MAX_TRACKING_RANGE),
+    trackingSpeed: finiteNumberInRange(value.trackingSpeed, 'trackingSpeed', MIN_TRACKING_SPEED, MAX_TRACKING_SPEED),
+    autoBlink: booleanField(value.autoBlink, 'autoBlink'),
   };
   if (value.gazeLock !== undefined) layout.gazeLock = validateGazeLock(value.gazeLock);
   return layout;

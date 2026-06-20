@@ -44,8 +44,8 @@ function validateWebviewLayout(value: unknown): CompanionLayout {
   assertExactKeys(
     value,
     value.gazeLock === undefined
-      ? ['x', 'y', 'scale', 'mouthSync']
-      : ['x', 'y', 'scale', 'mouthSync', 'gazeLock'],
+      ? ['x', 'y', 'scale', 'mouthSync', 'trackingRange', 'trackingSpeed', 'autoBlink']
+      : ['x', 'y', 'scale', 'mouthSync', 'trackingRange', 'trackingSpeed', 'autoBlink', 'gazeLock'],
     'layout',
   );
   if (value.gazeLock !== undefined) {
