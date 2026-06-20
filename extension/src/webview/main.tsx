@@ -573,22 +573,25 @@ function SettingsOverlay({
       <div className="assetTools">
         <div className="assetButtonRow">
           <button className="assetButton importButton" type="button" title="Import character" aria-label="Import character" onClick={onImport}>
-            <span className="assetLabel">Import</span>
+            <span className="codicon codicon-folder-opened assetIcon" aria-hidden="true" />
+            <span className="assetText">Import</span>
           </button>
           <button className="assetButton deleteButton" type="button" title="Delete character" aria-label="Delete character" onClick={onDelete}>
-            <span className="assetLabel">Delete</span>
+            <span className="codicon codicon-trash assetIcon" aria-hidden="true" />
+            <span className="assetText">Delete</span>
+          </button>
+          <button
+            className={`assetButton tweaksButton ${tweaksOpen ? 'active' : ''}`}
+            type="button"
+            title="Open tweaks"
+            aria-label="Open tweaks"
+            aria-expanded={tweaksOpen}
+            onClick={() => setTweaksOpen((open) => !open)}
+          >
+            <span className="codicon codicon-settings-gear assetIcon" aria-hidden="true" />
+            <span className="assetText">Tweaks</span>
           </button>
         </div>
-        <button
-          className={`assetButton tweaksButton ${tweaksOpen ? 'active' : ''}`}
-          type="button"
-          title="Open tweaks"
-          aria-label="Open tweaks"
-          aria-expanded={tweaksOpen}
-          onClick={() => setTweaksOpen((open) => !open)}
-        >
-          <span className="assetLabel">Tweaks</span>
-        </button>
 
         {tweaksOpen && (
           <div className="tweaksPanel" aria-label="Tweaks">

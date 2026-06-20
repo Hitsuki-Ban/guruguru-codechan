@@ -106,24 +106,32 @@ describe('editorCursorFocusVector', () => {
     expect(above.row).toBe(0);
   });
 
-  it('keeps diagonal exit vectors as the editor cursor baseline', () => {
-    const northEast = editorCursorFocusVector({ x: 0.7, y: -0.7 }, 0.5, 0.5);
-    const northWest = editorCursorFocusVector({ x: -0.7, y: -0.7 }, 0.5, 0.5);
+  it('reduces diagonal editor tracking to the dominant cardinal side', () => {
+    const northEastTop = cellFor(editorCursorFocusVector({ x: 0.7, y: -0.7 }, 0.1, 0.1));
+    const northEastBottom = cellFor(editorCursorFocusVector({ x: 0.7, y: -0.7 }, 0.9, 0.9));
+    const northWestTop = cellFor(editorCursorFocusVector({ x: -0.7, y: -0.7 }, 0.1, 0.1));
+    const northWestBottom = cellFor(editorCursorFocusVector({ x: -0.7, y: -0.7 }, 0.9, 0.9));
 
-    expect(northEast.x).toBeGreaterThan(0.25);
-    expect(northEast.y).toBeLessThan(-0.25);
-    expect(northWest.x).toBeLessThan(-0.25);
-    expect(northWest.y).toBeLessThan(-0.25);
+    expect(northEastTop.col).toBe(4);
+    expect(northEastBottom.col).toBe(4);
+    expect(northEastTop.row).toBeLessThan(northEastBottom.row);
+    expect(northWestTop.col).toBe(0);
+    expect(northWestBottom.col).toBe(0);
+    expect(northWestTop.row).toBeLessThan(northWestBottom.row);
   });
 
-  it('preserves cursor depth independently on both axes for diagonal editor targets', () => {
-    const nearNorthEast = editorCursorFocusVector({ x: 0.7, y: -0.7 }, 0.1, 0.9);
-    const farNorthEast = editorCursorFocusVector({ x: 0.7, y: -0.7 }, 0.9, 0.1);
+  it('uses the larger diagonal component as the stable cardinal axis', () => {
+    const verticalLeft = cellFor(editorCursorFocusVector({ x: 0.35, y: -0.9 }, 0.1, 0.1));
+    const verticalRight = cellFor(editorCursorFocusVector({ x: 0.35, y: -0.9 }, 0.9, 0.9));
+    const horizontalTop = cellFor(editorCursorFocusVector({ x: -0.9, y: 0.35 }, 0.1, 0.1));
+    const horizontalBottom = cellFor(editorCursorFocusVector({ x: -0.9, y: 0.35 }, 0.9, 0.9));
 
-    expect(nearNorthEast.x).toBeGreaterThan(0);
-    expect(nearNorthEast.y).toBeLessThan(0);
-    expect(farNorthEast.x).toBeGreaterThan(nearNorthEast.x);
-    expect(farNorthEast.y).toBeLessThan(nearNorthEast.y);
+    expect(verticalLeft.row).toBe(0);
+    expect(verticalRight.row).toBe(0);
+    expect(verticalLeft.col).toBeLessThan(verticalRight.col);
+    expect(horizontalTop.col).toBe(0);
+    expect(horizontalBottom.col).toBe(0);
+    expect(horizontalTop.row).toBeLessThan(horizontalBottom.row);
   });
 
   it('keeps the latest exit vector when no editor cursor side is known yet', () => {

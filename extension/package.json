@@ -2,7 +2,7 @@
   "name": "guruguru-codechan",
   "displayName": "%extension.displayName%",
   "description": "%extension.description%",
-  "version": "0.5.8",
+  "version": "0.5.9",
   "publisher": "hitsuki-ban",
   "license": "SEE LICENSE IN LICENSE",
   "type": "commonjs",
@@ -196,6 +196,7 @@
     "@jsquash/png": "3.1.1",
     "@jsquash/resize": "2.1.1",
     "@jsquash/webp": "1.5.0",
+    "@vscode/codicons": "0.0.45",
     "wasm-feature-detect": "1.8.0"
   }
 }

@@ -41,4 +41,17 @@ describe('webview settings accessibility', () => {
     expect(webviewStyles).toMatch(/@media\s*\(prefers-reduced-motion:\s*reduce\)/);
     expect(webviewStyles).toMatch(/transition:\s*none/);
   });
+
+  it('uses VS Code product-style icons with compact labels for settings actions', () => {
+    for (const icon of [
+      'codicon-folder-opened',
+      'codicon-trash',
+      'codicon-settings-gear',
+    ]) {
+      expect(webviewSource).toContain(icon);
+    }
+    expect(webviewSource).toContain('className="assetText"');
+    expect(webviewStyles).toMatch(/\.assetText\s*{/);
+    expect(webviewStyles).toMatch(/@media\s*\(max-width:\s*360px\)[\s\S]*\.assetText\s*{[\s\S]*display:\s*none/);
+  });
 });

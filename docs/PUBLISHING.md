@@ -19,13 +19,13 @@ The release gate runs extension tests, VS Code host smoke tests, VSIX packaging,
 4. Create and push a tag that exactly matches `extension/package.json`.
 
 ```bash
-git tag v0.5.8
-git push origin v0.5.8
+git tag v0.5.9
+git push origin v0.5.9
 ```
 
 The `Release VSIX` workflow verifies the tag, runs `pnpm verify:release`, and uploads `extension/guruguru-codechan-<version>.vsix` to GitHub Releases.
 
-Patch versions such as `0.5.8` are created as GitHub prereleases and are not published to the Visual Studio Marketplace.
+Patch versions such as `0.5.9` are created as GitHub prereleases and are not published to the Visual Studio Marketplace.
 Patch-zero versions such as `0.6.0` are created as regular GitHub Releases, but still do not publish to the Marketplace automatically.
 
 ## Marketplace Publishing

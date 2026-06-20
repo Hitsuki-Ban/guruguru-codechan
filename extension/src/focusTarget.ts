@@ -30,10 +30,6 @@ export interface EditorCursorLocalPositionInput {
 
 const EDGE_NEAR = 0.18;
 const EDGE_FAR = 0.95;
-const CROSS_AXIS_LIMIT = 0.9;
-const VERTICAL_CROSS_AXIS_LIMIT = 0.45;
-const DIAGONAL_COMPONENT_MIN = 0.25;
-const STRONG_VERTICAL_EXIT_BLEND = 0.35;
 const POINTER_GAZE_Y_RATIO = 0.44;
 const POINTER_RANGE_RATIO = 0.56;
 
@@ -57,29 +53,17 @@ export function editorCursorFocusVector(exitVector: FocusVector, localX: number,
 
   const x = clamp(localX, 0, 1);
   const y = clamp(localY, 0, 1);
-  if (Math.abs(exit.x) >= Math.abs(exit.y) && Math.abs(exit.y) < DIAGONAL_COMPONENT_MIN) {
+  if (Math.abs(exit.x) >= Math.abs(exit.y)) {
     return {
       x: Math.sign(exit.x),
       y: cursorAxis(y),
     };
   }
-  if (Math.abs(exit.y) > Math.abs(exit.x) && Math.abs(exit.x) < DIAGONAL_COMPONENT_MIN) {
-    return {
-      x: cursorAxis(x),
-      y: Math.sign(exit.y),
-    };
-  }
-  if (Math.abs(exit.x) >= DIAGONAL_COMPONENT_MIN && Math.abs(exit.y) >= DIAGONAL_COMPONENT_MIN) {
-    return normalizeFocusVector(signedDepth(exit.x, x), signedDepth(exit.y, y));
-  }
 
-  if (Math.abs(exit.x) >= Math.abs(exit.y)) {
-    const primary = signedDepth(exit.x, x);
-    return normalizeFocusVector(primary, crossAxis(y));
-  }
-
-  const primary = signedDepth(exit.y, y);
-  return normalizeFocusVector(crossAxis(x, VERTICAL_CROSS_AXIS_LIMIT), preserveStrongExitDepth(exit.y, primary));
+  return {
+    x: cursorAxis(x),
+    y: Math.sign(exit.y),
+  };
 }
 
 export function pointerFocusVector(rect: RectLike, point: PointLike, rangePx?: number): FocusVector {
@@ -144,10 +128,6 @@ export function visualColumn(text: string, character: number | undefined, tabSiz
   return column;
 }
 
-function crossAxis(value: number, limit = CROSS_AXIS_LIMIT): number {
-  return lerp(-limit, limit, value);
-}
-
 function cursorAxis(value: number): number {
   return lerp(-1, 1, value);
 }
@@ -155,17 +135,6 @@ function cursorAxis(value: number): number {
 function cursorLinePosition(column: number, rowLength: number): number {
   if (rowLength <= 0) return 0.5;
   return clamp(column / rowLength, 0, 1);
-}
-
-function signedDepth(component: number, value: number): number {
-  return component < 0
-    ? -lerp(EDGE_FAR, EDGE_NEAR, value)
-    : lerp(EDGE_NEAR, EDGE_FAR, value);
-}
-
-function preserveStrongExitDepth(component: number, depth: number): number {
-  if (Math.sign(component) !== Math.sign(depth) || Math.abs(component) <= Math.abs(depth)) return depth;
-  return lerp(component, depth, STRONG_VERTICAL_EXIT_BLEND);
 }
 
 function lerp(from: number, to: number, t: number): number {

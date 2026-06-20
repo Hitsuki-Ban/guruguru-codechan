@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.9
+
+- Simplifies editor-cursor gaze tracking to stable four-direction movement after the pointer leaves the companion view.
+- Updates the settings action buttons with compact VS Code-style icons for narrow companion views.
+- Adds the bundled Webview icon font to the extension's local content security policy.
+
 ## 0.5.8
 
 - Improves editor-cursor gaze stability after the pointer leaves the companion view.

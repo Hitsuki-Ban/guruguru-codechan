@@ -14,6 +14,35 @@ body {
   overscroll-behavior: none;
 }
 
+@font-face {
+  font-family: codicon;
+  font-display: block;
+  src: url('@vscode/codicons/dist/codicon.ttf') format('truetype');
+}
+
+.codicon {
+  display: inline-block;
+  font-family: codicon;
+  font-style: normal;
+  font-weight: normal;
+  text-align: center;
+  text-decoration: none;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+}
+
+.codicon-folder-opened::before {
+  content: "\eaf7";
+}
+
+.codicon-trash::before {
+  content: "\ea81";
+}
+
+.codicon-settings-gear::before {
+  content: "\eb51";
+}
+
 button {
   border: 1px solid var(--vscode-button-border, transparent);
   border-radius: 6px;
@@ -217,9 +246,9 @@ button:active {
   top: 12px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  width: min(220px, calc(100% - 84px));
+  align-items: flex-end;
+  gap: 7px;
+  width: min(258px, calc(100% - 84px));
   pointer-events: auto;
 }
 
@@ -227,7 +256,7 @@ button:active {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 8px;
+  gap: 6px;
   width: 100%;
 }
 
@@ -248,9 +277,10 @@ button:active {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 62px;
+  gap: 6px;
+  min-width: 0;
   height: 30px;
-  padding: 0 11px;
+  padding: 0 9px;
   border-radius: 7px;
   color: color-mix(in srgb, var(--vscode-editor-foreground) 58%, transparent);
   opacity: 0.82;
@@ -268,8 +298,7 @@ button:active {
 }
 
 .tweaksButton {
-  align-self: flex-end;
-  min-width: 74px;
+  align-self: auto;
 }
 
 .tweaksButton.active {
@@ -278,7 +307,13 @@ button:active {
   opacity: 1;
 }
 
-.assetLabel {
+.assetIcon {
+  flex: 0 0 auto;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.assetText {
   font-size: 11px;
   line-height: 1;
 }
@@ -377,15 +412,19 @@ button:active {
   transform: translate(-50%, -50%) translateY(1px) scale(0.96);
 }
 
-@media (max-width: 300px) {
+@media (max-width: 360px) {
   .assetTools {
     gap: 5px;
-    width: min(184px, calc(100% - 76px));
+    width: min(174px, calc(100% - 76px));
   }
 
   .assetButton {
-    min-width: 52px;
-    padding: 0 8px;
+    width: 32px;
+    padding: 0;
+  }
+
+  .assetText {
+    display: none;
   }
 
   .tweaksPanel {
