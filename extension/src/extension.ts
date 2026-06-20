@@ -118,6 +118,10 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       }
     }),
   );
+
+  if (vscode.workspace.getConfiguration('guruguru-codechan').get<boolean>('openOnStartup') === true) {
+    await panel.open({ preserveFocus: true });
+  }
 }
 
 export function deactivate(): void {}

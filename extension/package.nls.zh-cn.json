@@ -3,6 +3,8 @@
   "extension.description": "Codeちゃんは見ている。一个在 VS Code 中静静看着你工作的可停靠伙伴视图。",
   "views.container.title": "Guruguru Codechan",
   "views.codechan.name": "Codeちゃん",
+  "configuration.title": "Guruguru Codechan",
+  "configuration.openOnStartup.description": "在 VS Code 启动后自动打开 Codeちゃん 伙伴视图。",
   "commands.category": "Guruguru Codechan",
   "commands.openCanvas.title": "打开 Codeちゃん 视图",
   "commands.switchCharacter.title": "切换角色",

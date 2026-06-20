@@ -1,0 +1,89 @@
+name: Marketplace Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Stable release tag to publish, for example v0.6.0'
+        required: true
+        type: string
+      confirmation:
+        description: 'Type: publish <tag> to marketplace'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: marketplace-release-${{ inputs.tag }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Publish Stable Release To Marketplace
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout release tag
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.tag }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 11.5.2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22.13.0'
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate Marketplace gate
+        id: meta
+        run: |
+          TAG="${{ inputs.tag }}"
+          VERSION="$(node -p "require('./extension/package.json').version")"
+          EXPECTED_TAG="v${VERSION}"
+          if [ "${TAG}" != "${EXPECTED_TAG}" ]; then
+            echo "Input tag ${TAG} must match extension/package.json version ${EXPECTED_TAG}." >&2
+            exit 1
+          fi
+          if [[ ! "${VERSION}" =~ ^([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+            echo "Extension version must be major.minor.patch: ${VERSION}" >&2
+            exit 1
+          fi
+          PATCH="${BASH_REMATCH[3]}"
+          if [ "${PATCH}" != "0" ]; then
+            echo "Marketplace publishing is only allowed for stable patch-zero versions. Got ${VERSION}." >&2
+            exit 1
+          fi
+          EXPECTED_CONFIRMATION="publish ${TAG} to marketplace"
+          if [ "${{ inputs.confirmation }}" != "${EXPECTED_CONFIRMATION}" ]; then
+            echo "Confirmation must be exactly: ${EXPECTED_CONFIRMATION}" >&2
+            exit 1
+          fi
+          echo "version=${VERSION}" >> "${GITHUB_OUTPUT}"
+
+      - name: Verify and package
+        run: xvfb-run -a pnpm verify:release
+
+      - name: Check Marketplace publishing token
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        run: |
+          if [ -z "${VSCE_PAT}" ]; then
+            echo "Repository secret VSCE_PAT is required to publish to the Visual Studio Marketplace." >&2
+            exit 1
+          fi
+
+      - name: Publish to Visual Studio Marketplace
+        working-directory: extension
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        run: pnpm exec vsce publish --packagePath "guruguru-codechan-${{ steps.meta.outputs.version }}.vsix"

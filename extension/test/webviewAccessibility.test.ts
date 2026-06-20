@@ -19,6 +19,7 @@ describe('webview settings accessibility', () => {
       'Lock gaze',
       'Unlock gaze',
       'Zoom companion',
+      'Sync mouth with typing',
     ]) {
       expect(webviewSource).toContain(`aria-label="${label}"`);
     }

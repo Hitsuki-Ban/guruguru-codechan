@@ -2,7 +2,7 @@
   "name": "guruguru-codechan",
   "displayName": "%extension.displayName%",
   "description": "%extension.description%",
-  "version": "0.5.5",
+  "version": "0.5.6",
   "publisher": "hitsuki-ban",
   "license": "SEE LICENSE IN LICENSE",
   "type": "commonjs",
@@ -60,9 +60,20 @@
     "onCommand:guruguru-codechan.switchCharacter",
     "onCommand:guruguru-codechan.toggleSettings",
     "onCommand:guruguru-codechan.setMouthLevel",
-    "onView:guruguru-codechan.codechanView"
+    "onView:guruguru-codechan.codechanView",
+    "onStartupFinished"
   ],
   "contributes": {
+    "configuration": {
+      "title": "%configuration.title%",
+      "properties": {
+        "guruguru-codechan.openOnStartup": {
+          "type": "boolean",
+          "default": false,
+          "description": "%configuration.openOnStartup.description%"
+        }
+      }
+    },
     "viewsContainers": {
       "panel": [
         {

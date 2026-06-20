@@ -15,6 +15,7 @@ describe('parseWebviewToHostMessage', () => {
         x: 42,
         y: 58,
         scale: 0.72,
+        mouthSync: true,
         gazeLock: {
           x: 12,
           y: 24,
@@ -30,6 +31,7 @@ describe('parseWebviewToHostMessage', () => {
         x: 42,
         y: 58,
         scale: 0.72,
+        mouthSync: true,
         gazeLock: {
           x: 12,
           y: 24,
@@ -61,6 +63,7 @@ describe('parseWebviewToHostMessage', () => {
       { type: 'layoutChanged' },
       { type: 'layoutChanged', layout: { x: Number.NaN, y: 50, scale: 0.62 } },
       { type: 'layoutChanged', layout: { x: 50, y: 50, scale: 2 } },
+      { type: 'layoutChanged', layout: { x: 50, y: 50, scale: 0.62, mouthSync: 'yes' } },
       { type: 'layoutChanged', layout: { x: 50, y: 50, scale: 0.62, extra: true } },
       { type: 'layoutChanged', layout: { x: 50, y: 50, scale: 0.62, gazeLock: { x: 50, y: 50, vectorX: 0, vectorY: 0, extra: true } } },
       { type: 'viewPointerExit', x: 'left', y: 0 },

@@ -3,6 +3,8 @@
   "extension.description": "Codeちゃんは見ている。 A dockable VS Code companion that quietly watches your work.",
   "views.container.title": "Guruguru Codechan",
   "views.codechan.name": "Codeちゃん",
+  "configuration.title": "Guruguru Codechan",
+  "configuration.openOnStartup.description": "Open the Codeちゃん companion view automatically after VS Code startup.",
   "commands.category": "Guruguru Codechan",
   "commands.openCanvas.title": "Open Codechan View",
   "commands.switchCharacter.title": "Switch Character",

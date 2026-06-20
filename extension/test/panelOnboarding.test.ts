@@ -28,4 +28,32 @@ describe('CompanionPanel onboarding behavior', () => {
 
     expect(vscodeMockState.executeCommand).toHaveBeenCalledWith('guruguru-codechan.codechanView.focus');
   });
+
+  it('does not pulse mouth from keyboard input while mouth sync is disabled', async () => {
+    const postMessage = vi.fn(async () => true);
+    const panel = new CompanionPanel({} as never, {
+      layout: () => ({ x: 50, y: 50, scale: 0.62, mouthSync: false }),
+    } as never);
+    (panel as unknown as { view: { webview: { postMessage: typeof postMessage } } }).view = {
+      webview: { postMessage },
+    };
+
+    await panel.pulseMouth();
+
+    expect(postMessage).not.toHaveBeenCalled();
+  });
+
+  it('pulses mouth from keyboard input while mouth sync is enabled', async () => {
+    const postMessage = vi.fn(async () => true);
+    const panel = new CompanionPanel({} as never, {
+      layout: () => ({ x: 50, y: 50, scale: 0.62, mouthSync: true }),
+    } as never);
+    (panel as unknown as { view: { webview: { postMessage: typeof postMessage } } }).view = {
+      webview: { postMessage },
+    };
+
+    await panel.pulseMouth();
+
+    expect(postMessage).toHaveBeenCalledWith({ type: 'mouthLevel', mouthLevel: 2 });
+  });
 });

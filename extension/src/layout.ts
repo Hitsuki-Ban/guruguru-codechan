@@ -7,6 +7,7 @@ export const DEFAULT_LAYOUT: CompanionLayout = {
   x: 50,
   y: 50,
   scale: 0.62,
+  mouthSync: false,
 };
 
 export class LayoutValidationError extends Error {
@@ -22,6 +23,7 @@ export function validateCompanionLayout(value: unknown): CompanionLayout {
     x: finiteNumberInRange(value.x, 'x', 0, 100),
     y: finiteNumberInRange(value.y, 'y', 0, 100),
     scale: finiteNumberInRange(value.scale, 'scale', MIN_LAYOUT_SCALE, MAX_LAYOUT_SCALE),
+    mouthSync: booleanField(value.mouthSync, 'mouthSync'),
   };
   if (value.gazeLock !== undefined) layout.gazeLock = validateGazeLock(value.gazeLock);
   return layout;
@@ -43,6 +45,13 @@ function finiteNumberInRange(value: unknown, field: string, min: number, max: nu
   }
   if (value < min || value > max) {
     throw new LayoutValidationError(`Invalid companion layout: ${field} must be between ${min} and ${max}.`);
+  }
+  return value;
+}
+
+function booleanField(value: unknown, field: string): boolean {
+  if (typeof value !== 'boolean') {
+    throw new LayoutValidationError(`Invalid companion layout: ${field} must be a boolean.`);
   }
   return value;
 }

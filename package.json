@@ -1,7 +1,7 @@
 {
   "name": "guruguru-codechan-workspace",
   "private": true,
-  "version": "0.5.5",
+  "version": "0.5.6",
   "type": "module",
   "packageManager": "pnpm@11.5.2",
   "scripts": {
@@ -12,7 +12,8 @@
     "extension:vsix-install-smoke": "node scripts/run-vsix-install-smoke.mjs",
     "verify:extension-package": "node scripts/verify-extension-package.mjs",
     "verify:vsix-artifact-hygiene": "node scripts/verify-vsix-artifact-hygiene.mjs",
-    "verify:release": "pnpm extension:test && pnpm extension:vscode-smoke && pnpm extension:package && pnpm verify:vsix-artifact-hygiene && pnpm verify:extension-package && pnpm extension:vsix-install-smoke"
+    "verify:release": "pnpm extension:test && pnpm extension:vscode-smoke && pnpm extension:package && pnpm verify:vsix-artifact-hygiene && pnpm verify:extension-package && pnpm extension:vsix-install-smoke",
+    "perf:vscode": "pnpm extension:build && node scripts/collect-vscode-performance.mjs"
   },
   "engines": {
     "node": ">=22.13.0"

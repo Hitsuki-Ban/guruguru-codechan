@@ -10,6 +10,10 @@ type ExtensionManifest = {
   activationEvents?: string[];
   contributes?: {
     commands?: Array<{ command: string; title: string; category?: string }>;
+    configuration?: {
+      title?: string;
+      properties?: Record<string, { type?: string; default?: unknown; description?: string }>;
+    };
     menus?: {
       'view/title'?: Array<{ command: string; when?: string; group?: string }>;
     };
@@ -60,6 +64,18 @@ describe('command surface contract', () => {
       .map((command) => command.id);
     expect(sorted(commandActivations)).toEqual(sorted(expectedCommandActivations));
     expect(packageJson.activationEvents).toContain('onView:guruguru-codechan.codechanView');
+    expect(packageJson.activationEvents).toContain('onStartupFinished');
+  });
+
+  it('keeps optional startup opening exposed as an explicit user setting', () => {
+    const setting = packageJson.contributes?.configuration?.properties?.['guruguru-codechan.openOnStartup'];
+
+    expect(packageJson.contributes?.configuration?.title).toBe('%configuration.title%');
+    expect(setting).toMatchObject({
+      type: 'boolean',
+      default: false,
+      description: '%configuration.openOnStartup.description%',
+    });
   });
 
   it('keeps the view title toolbar limited to title actions', () => {

@@ -27,6 +27,7 @@ export interface CompanionLayout {
   x: number;
   y: number;
   scale: number;
+  mouthSync: boolean;
   gazeLock?: GazeLock;
 }
 

@@ -1,18 +1,18 @@
 name: Bug report
-description: Report a reproducible Guruguru Companion bug.
+description: Report a reproducible Guruguru Codechan bug.
 title: "[Bug]: "
 labels: ["bug", "needs-triage"]
 body:
   - type: markdown
     attributes:
       value: |
-        Thanks for helping test Guruguru Companion. Please avoid attaching proprietary character assets unless you have the right to share them in a public issue.
+        Thanks for helping test Guruguru Codechan. Please avoid attaching proprietary character assets unless you have the right to share them in a public issue.
   - type: input
     id: extension-version
     attributes:
-      label: Guruguru Companion version
-      description: Example: 0.4.11.
-      placeholder: "0.4.11"
+      label: Guruguru Codechan version
+      description: Example: 0.5.6.
+      placeholder: "0.5.6"
     validations:
       required: true
   - type: input
@@ -20,7 +20,7 @@ body:
     attributes:
       label: Install source / VSIX or Marketplace version
       description: Tell us whether this came from the Visual Studio Marketplace, a GitHub Release VSIX, or a local build.
-      placeholder: "Visual Studio Marketplace v0.5.5"
+      placeholder: "GitHub Release VSIX v0.5.6"
     validations:
       required: true
   - type: input

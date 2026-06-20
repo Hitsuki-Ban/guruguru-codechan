@@ -35,8 +35,12 @@ export class CompanionPanel implements vscode.WebviewViewProvider {
     private readonly registry: CharacterRegistry,
   ) {}
 
-  async open(): Promise<void> {
-    await vscode.commands.executeCommand(`${CompanionPanel.viewType}.focus`);
+  async open(options?: { preserveFocus?: boolean }): Promise<void> {
+    if (options?.preserveFocus) {
+      await vscode.commands.executeCommand(`${CompanionPanel.viewType}.focus`, { preserveFocus: true });
+    } else {
+      await vscode.commands.executeCommand(`${CompanionPanel.viewType}.focus`);
+    }
     await this.postInit();
     await this.postFocusTarget();
   }
@@ -161,6 +165,7 @@ export class CompanionPanel implements vscode.WebviewViewProvider {
 
   async pulseMouth(): Promise<void> {
     if (!this.webview()) return;
+    if (!this.registry.layout().mouthSync) return;
     if (this.mouthLevel !== 2) {
       this.mouthLevel = 2;
       await this.post({ type: 'mouthLevel', mouthLevel: 2 });
@@ -200,6 +205,7 @@ export class CompanionPanel implements vscode.WebviewViewProvider {
         break;
       case 'layoutChanged':
         await this.registry.setLayout(message.layout);
+        if (!message.layout.mouthSync) await this.resetMouthPulse();
         break;
       case 'viewPointerExit':
         await this.setExternalFocusVector(message.x, message.y);
@@ -270,6 +276,12 @@ export class CompanionPanel implements vscode.WebviewViewProvider {
     this.mouthTimer = undefined;
     this.focusTimer = undefined;
     this.mouthLevel = 0;
+  }
+
+  private async resetMouthPulse(): Promise<void> {
+    if (this.mouthTimer) clearTimeout(this.mouthTimer);
+    this.mouthTimer = undefined;
+    await this.setMouthLevel(0);
   }
 
   private html(webview: vscode.Webview): string {

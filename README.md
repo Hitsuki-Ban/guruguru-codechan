@@ -27,7 +27,7 @@ English | [日本語](./docs/i18n/README.ja.md) | [简体中文](./docs/i18n/REA
 
 - Shows Codeちゃん in a dockable VS Code view.
 - Codeちゃん follows the pointer inside the view and the editor cursor when VS Code exposes enough information.
-- Lets you adjust position, scale, and gaze lock from settings.
+- Lets you adjust position, scale, gaze lock, and mouth sync from settings.
 - Lets you import your own 150-frame guruguru-style character assets.
 
 ## Install
@@ -39,6 +39,7 @@ code --install-extension PATH_TO_VSIX --force
 ```
 
 After installing, run `Guruguru Codechan: Open Codechan View` from the Command Palette.
+If you want the view to open automatically after VS Code starts, enable `Guruguru Codechan: Open On Startup` in Settings.
 
 ## Make Your Own Character
 
@@ -76,7 +77,7 @@ This extension follows the browser avatar idea, then adjusts it for everyday use
 
 - Performance: the runtime shows only the active frame, and imported large images are normalized to 512px to reduce resource use.
 - Input: gaze tracking uses pointer and editor-selection information available through the public VS Code API.
-- Mouth animation: mouth frames currently react to keyboard input, and the `mouthLevel` channel can be connected to TTS later.
+- Mouth animation: when enabled in settings, mouth frames react to keyboard input. The `mouthLevel` channel can be connected to TTS later.
 
 VS Code does not expose global mouse coordinates or exact positions for every workbench panel.
 Because of that, Codeちゃん cannot perform perfectly accurate global mouse tracking.

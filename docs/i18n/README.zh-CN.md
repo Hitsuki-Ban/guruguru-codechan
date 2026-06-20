@@ -27,7 +27,7 @@ Codeちゃん 会眨眼，静静看着你工作，并在鼠标接近她时用视
 
 - 在 VS Code 的可停靠视图中显示 Codeちゃん。
 - Codeちゃん会追随视图内鼠标和编辑器光标。
-- 在设置层里调整位置、缩放和视线锁定。
+- 在设置层里调整位置、缩放、视线锁定和口型同步。
 - 导入自己的 150 帧 guruguru 风格角色素材。
 
 ## 安装
@@ -36,6 +36,7 @@ Codeちゃん 会眨眼，静静看着你工作，并在鼠标接近她时用视
 如果需要 VSIX，也可以从 [GitHub Releases](https://github.com/Hitsuki-Ban/guruguru-codechan/releases) 下载。
 
 安装后，从命令面板执行 `Guruguru Codechan: Open Codechan View`。
+如果希望 VS Code 启动后自动打开视图，可以在设置中启用 `Guruguru Codechan: Open On Startup`。
 
 ## 使用自己的角色
 
@@ -72,7 +73,7 @@ F/r0c0.webp ... F/r4c4.webp
 
 - 性能优化：运行时只显示当前帧；导入大图时会规范化到 512px，减少资源占用。
 - 输入调整：视线追踪使用公开 VS Code API 能提供的鼠标和编辑器选择信息。
-- 口型同步：角色口型动画目前和键盘输入联动，未来可能会加入 TTS 支持。
+- 口型同步：在设置中开启后，角色口型动画会和键盘输入联动，未来可能会加入 TTS 支持。
 
 VS Code 不向扩展暴露全局鼠标坐标，也不提供所有工作区面板的精确位置。
 因此 Codeちゃん 无法做到准确的全局鼠标追踪。

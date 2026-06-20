@@ -45,6 +45,11 @@ function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
 }
 
+function withoutGazeLock(layout: CompanionLayout): CompanionLayout {
+  const { gazeLock: _gazeLock, ...next } = layout;
+  return next;
+}
+
 function sheetFor(blink: boolean, mouthLevel: 0 | 1 | 2): SheetName {
   return SHEETS[(blink ? 3 : 0) + mouthLevel];
 }
@@ -162,7 +167,7 @@ function App() {
   const applyGazeLock = React.useCallback((gazeLock: GazeLock | undefined) => {
     const snapshot = stateRef.current;
     if (!snapshot) return;
-    const layout = { ...snapshot.layout, gazeLock };
+    const layout = gazeLock ? { ...snapshot.layout, gazeLock } : withoutGazeLock(snapshot.layout);
     applyLayout(layout, true);
     setLockPrompt(undefined);
     if (gazeLock) targetFocusVector(gazeLock.vectorX, gazeLock.vectorY);
@@ -443,6 +448,9 @@ function App() {
           onScale={(scale) => {
             applyLayout({ ...layout, scale }, true);
           }}
+          onMouthSync={(mouthSync) => {
+            applyLayout({ ...layout, mouthSync }, true);
+          }}
           onImport={() => vscode.postMessage({ type: 'importCharacter' })}
           onDelete={() => vscode.postMessage({ type: 'deleteCharacter' })}
         />
@@ -484,11 +492,12 @@ function App() {
   );
 }
 
-function SettingsOverlay({ currentCharacterName, layout, onNudge, onScale, onImport, onDelete }: {
+function SettingsOverlay({ currentCharacterName, layout, onNudge, onScale, onMouthSync, onImport, onDelete }: {
   currentCharacterName: string;
   layout: CompanionLayout;
   onNudge(dx: number, dy: number): void;
   onScale(scale: number): void;
+  onMouthSync(enabled: boolean): void;
   onImport(): void;
   onDelete(): void;
 }) {
@@ -521,6 +530,16 @@ function SettingsOverlay({ currentCharacterName, layout, onNudge, onScale, onImp
           <span className="assetLabel">Delete</span>
         </button>
       </div>
+      <label className="mouthSyncToggle" title="Sync mouth with typing">
+        <input
+          className="mouthSyncInput"
+          type="checkbox"
+          checked={layout.mouthSync}
+          aria-label="Sync mouth with typing"
+          onChange={(event) => onMouthSync(event.currentTarget.checked)}
+        />
+        <span className="mouthSyncLabel">Mouth sync</span>
+      </label>
       <span className="characterName" title={currentCharacterName}>{currentCharacterName}</span>
     </div>
   );

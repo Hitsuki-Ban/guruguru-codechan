@@ -41,7 +41,13 @@ export function parseWebviewToHostMessage(value: unknown): WebviewToHostMessage 
 
 function validateWebviewLayout(value: unknown): CompanionLayout {
   if (!isRecord(value)) throw new WebviewMessageValidationError('Invalid Webview message layout: expected an object.');
-  assertExactKeys(value, value.gazeLock === undefined ? ['x', 'y', 'scale'] : ['x', 'y', 'scale', 'gazeLock'], 'layout');
+  assertExactKeys(
+    value,
+    value.gazeLock === undefined
+      ? ['x', 'y', 'scale', 'mouthSync']
+      : ['x', 'y', 'scale', 'mouthSync', 'gazeLock'],
+    'layout',
+  );
   if (value.gazeLock !== undefined) {
     if (!isRecord(value.gazeLock)) {
       throw new WebviewMessageValidationError('Invalid Webview message layout: gazeLock must be an object.');
