@@ -10,7 +10,7 @@ Codeちゃんはまばたきし、
 
 もちろん自分で用意したぐるぐる風キャラクター素材に差し替えることもできます。
 
-![Guruguru Codechan preview](../../extension/media/marketplace/codechan-view.png)
+![Guruguru Codechan preview](../../extension/media/marketplace/codechan-view-v0.5.4.png)
 
 [English](../../README.md) | 日本語 | [简体中文](./README.zh-CN.md)
 
@@ -33,7 +33,8 @@ Codeちゃんはまばたきし、
 
 ## インストール
 
-最新のプレビュー VSIX は [GitHub Releases](https://github.com/Hitsuki-Ban/guruguru-codechan/releases) から取得できます。
+Guruguru Codechan は [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=hitsuki-ban.guruguru-codechan) からインストールできます。
+VSIX が必要な場合は [GitHub Releases](https://github.com/Hitsuki-Ban/guruguru-codechan/releases) から取得できます。
 
 インストール後、コマンドパレットから `Guruguru Codechan: Open Codechan View` を実行してください。
 

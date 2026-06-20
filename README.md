@@ -9,7 +9,7 @@ When you get tired, take a short break and play with Codeちゃん.
 
 Of course, you can also replace her with your own guruguru-style character assets.
 
-![Guruguru Codechan preview](./extension/media/marketplace/codechan-view.png)
+![Guruguru Codechan preview](./extension/media/marketplace/codechan-view-v0.5.4.png)
 
 English | [日本語](./docs/i18n/README.ja.md) | [简体中文](./docs/i18n/README.zh-CN.md)
 
@@ -32,7 +32,7 @@ English | [日本語](./docs/i18n/README.ja.md) | [简体中文](./docs/i18n/REA
 
 ## Install
 
-Download the latest preview VSIX from the [GitHub Releases](https://github.com/Hitsuki-Ban/guruguru-codechan/releases), then install it in VS Code:
+Install Guruguru Codechan from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=hitsuki-ban.guruguru-codechan), or download the latest VSIX from the [GitHub Releases](https://github.com/Hitsuki-Ban/guruguru-codechan/releases):
 
 ```sh
 code --install-extension PATH_TO_VSIX --force

@@ -1,4 +1,4 @@
-name: Release VSIX
+name: Release VSIX And Marketplace
 
 on:
   push:
@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   release:
-    name: Package And Publish GitHub Release
+    name: Package And Publish Release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -53,7 +53,7 @@ jobs:
       - name: Write release notes
         run: |
           cat > release-notes.md <<'EOF'
-          Preview VSIX release for guruguru-codechan.
+          VSIX release for guruguru-codechan.
 
           Install this package from VS Code with:
 
@@ -64,6 +64,15 @@ jobs:
           This release includes the bundled non-commercial sample asset set. User-imported assets remain owned by the user or their licensors.
           EOF
 
+      - name: Check Marketplace publishing token
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        run: |
+          if [ -z "${VSCE_PAT}" ]; then
+            echo "Repository secret VSCE_PAT is required to publish to the Visual Studio Marketplace." >&2
+            exit 1
+          fi
+
       - name: Create GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -72,5 +81,10 @@ jobs:
             --repo "${GITHUB_REPOSITORY}" \
             --title "guruguru-codechan ${GITHUB_REF_NAME}" \
             --notes-file release-notes.md \
-            --prerelease \
             --verify-tag
+
+      - name: Publish to Visual Studio Marketplace
+        working-directory: extension
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        run: pnpm exec vsce publish --packagePath "guruguru-codechan-${{ steps.meta.outputs.version }}.vsix"

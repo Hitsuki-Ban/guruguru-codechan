@@ -33,7 +33,7 @@ const ALLOWED_EXACT = new Set([
   'extension/LICENSE.txt',
   'extension/changelog.md',
   'extension/media/icon.png',
-  'extension/media/marketplace/codechan-view.png',
+  'extension/media/marketplace/codechan-view-v0.5.4.png',
   'extension/media/marketplace/demo-editor-cursor.gif',
   'extension/media/marketplace/demo-pointer.gif',
   'extension/package.json',
@@ -132,9 +132,9 @@ if (!zipEntries.has('extension/ASSET_PROVENANCE.json')) {
 if (!zipEntries.has('extension/SUPPORT.md')) {
   fail('missing extension/SUPPORT.md');
 }
-const marketplacePreview = zipEntries.get('extension/media/marketplace/codechan-view.png');
+const marketplacePreview = zipEntries.get('extension/media/marketplace/codechan-view-v0.5.4.png');
 if (!marketplacePreview) {
-  fail('missing extension/media/marketplace/codechan-view.png');
+  fail('missing extension/media/marketplace/codechan-view-v0.5.4.png');
 }
 if (marketplacePreview.uncompressedSize > MAX_MARKETPLACE_PREVIEW_BYTES) {
   fail(`Marketplace preview image is larger than the ${MAX_MARKETPLACE_PREVIEW_BYTES} byte budget: ${marketplacePreview.uncompressedSize}`);

@@ -17,6 +17,6 @@ if (basename(process.cwd()) !== 'extension') {
 
 cleanGeneratedVsixArtifacts(resolve('..'));
 
-execFileSync('pnpm', ['exec', 'vsce', 'package', '--no-dependencies', '--pre-release', '--out', output], {
+execFileSync('pnpm', ['exec', 'vsce', 'package', '--no-dependencies', '--out', output], {
   stdio: 'inherit',
 });

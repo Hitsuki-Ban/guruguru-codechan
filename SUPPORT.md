@@ -1,6 +1,6 @@
 # Support
 
-Guruguru Codechan is a public preview extension. Use GitHub Issues for reproducible bugs, packaged VSIX problems, and asset import or asset rights questions:
+Use GitHub Issues for reproducible bugs, Marketplace or packaged VSIX problems, and asset import or asset rights questions:
 
 https://github.com/Hitsuki-Ban/guruguru-codechan/issues
 

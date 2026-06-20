@@ -16,7 +16,7 @@
 
 - Rewrites the Marketplace and repository README pages around a simpler reader-first product introduction.
 - Adds English, Japanese, and Simplified Chinese static manifest localization through `package.nls` files.
-- Updates the Marketplace preview copy to use the product catch phrase `Codeちゃんは見ている。`.
+- Updates the Marketplace title-image copy to use the product catch phrase `Codeちゃんは見ている。`.
 
 ## 0.5.1
 
