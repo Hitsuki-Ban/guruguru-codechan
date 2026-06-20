@@ -1,6 +1,7 @@
 import { mkdir, mkdtemp, readFile, readdir, rm, stat, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { dirname, isAbsolute, join, relative, resolve } from 'node:path';
+import { deflateSync } from 'node:zlib';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import * as vscode from 'vscode';
 import { SHEETS } from '../src/assetValidation';
@@ -9,7 +10,7 @@ import { DEFAULT_LAYOUT } from '../src/layout';
 import type { CharacterRecord, CompanionLayout } from '../src/shared';
 
 const vscodeMockState = vi.hoisted(() => ({
-  copyFailurePattern: undefined as RegExp | undefined,
+  readFailurePattern: undefined as RegExp | undefined,
   writeTargets: [] as string[],
 }));
 
@@ -60,8 +61,14 @@ vi.mock('vscode', async () => {
             entry.isDirectory() ? FileType.Directory : FileType.File,
           ]);
         },
+        async readFile(uri: Uri): Promise<Uint8Array> {
+          if (vscodeMockState.readFailurePattern?.test(uri.fsPath)) {
+            throw new Error(`Mock frame read failure for ${uri.fsPath}`);
+          }
+          return nodeFs.readFile(uri.fsPath);
+        },
         async copy(source: Uri, target: Uri): Promise<void> {
-          if (vscodeMockState.copyFailurePattern?.test(source.fsPath)) {
+          if (vscodeMockState.readFailurePattern?.test(source.fsPath)) {
             throw new Error(`Mock copy failure for ${source.fsPath}`);
           }
           vscodeMockState.writeTargets.push(target.fsPath);
@@ -85,6 +92,10 @@ vi.mock('vscode', async () => {
 const CHARACTERS_KEY = 'guruguru-codechan.characters';
 const CURRENT_CHARACTER_KEY = 'guruguru-codechan.currentCharacterId';
 const LAYOUT_KEY = 'guruguru-codechan.layout';
+const SOLID_WEBP = Buffer.from(
+  'UklGRkQAAABXRUJQVlA4IDgAAAAwAwCdASogACAAPpFEnEolo6KhqAgAsBIJZQDIEoAAQFBQAP7Xlf/VeIMzx7/3RsXW0XOLFpAAAA==',
+  'base64',
+);
 
 type MockGlobalState = {
   get<T>(key: string): T | undefined;
@@ -105,7 +116,7 @@ describe('CharacterRegistry storage transactions', () => {
 
   beforeEach(() => {
     roots = [];
-    vscodeMockState.copyFailurePattern = undefined;
+    vscodeMockState.readFailurePattern = undefined;
     vscodeMockState.writeTargets = [];
   });
 
@@ -136,6 +147,19 @@ describe('CharacterRegistry storage transactions', () => {
     const reloaded = new CharacterRegistry(env.context);
     expect(reloaded.current()).toEqual(record);
     expect(reloaded.all().map((character) => character.id)).toEqual([BUILT_IN_CHARACTER.id, 'mint-pilot']);
+  });
+
+  it('normalizes imported frames to 512 pixels on the longest edge before storing them', async () => {
+    const env = await createEnvironment();
+    const source = await createCharacterFixture(env.root, 'large-png', 'png', {
+      imageSize: { width: 768, height: 640 },
+    });
+    const registry = new CharacterRegistry(env.context);
+
+    const record = await registry.importCharacter(source, 'Large PNG');
+    const storedFrame = await readFile(join(env.globalStorageRoot, record.storageRelativePath!, 'A', 'r0c0.png'));
+
+    expect(readPngSize(storedFrame)).toEqual({ width: 512, height: 427 });
   });
 
   it('rejects invalid assets before writing imported character storage', async () => {
@@ -182,13 +206,13 @@ describe('CharacterRegistry storage transactions', () => {
     expect(registry.current().id).toBe(BUILT_IN_CHARACTER.id);
   });
 
-  it('cleans up partially copied files when frame copy fails', async () => {
+  it('cleans up partially written files when frame processing fails', async () => {
     const env = await createEnvironment();
     const source = await createCharacterFixture(env.root, 'copy-fails', 'webp');
     const registry = new CharacterRegistry(env.context);
-    vscodeMockState.copyFailurePattern = /A[\\/]r0c2\.webp$/;
+    vscodeMockState.readFailurePattern = /A[\\/]r0c2\.webp$/;
 
-    await expect(registry.importCharacter(source, 'Copy Fails')).rejects.toThrow(/Mock copy failure/);
+    await expect(registry.importCharacter(source, 'Copy Fails')).rejects.toThrow(/Mock frame read failure/);
 
     expect(await pathExists(join(env.globalStorageRoot, 'characters', 'copy-fails'))).toBe(false);
     expect(env.globalState.get<CharacterRecord[]>(CHARACTERS_KEY)).toBeUndefined();
@@ -268,23 +292,25 @@ describe('CharacterRegistry storage transactions', () => {
     options: {
       skip?: string;
       replace?: { from: string; to: string };
+      imageSize?: { width: number; height: number };
     } = {},
   ): Promise<vscode.Uri> {
     const sourceRoot = join(root, name);
+    const frameBytes = await frameFixture(ext, options.imageSize);
     for (const sheet of SHEETS) {
       await mkdir(join(sourceRoot, sheet), { recursive: true });
       for (let row = 0; row < 5; row += 1) {
         for (let col = 0; col < 5; col += 1) {
           const relative = `${sheet}/r${row}c${col}.${ext}`;
           if (relative === options.skip || relative === options.replace?.from) continue;
-          await writeFile(join(sourceRoot, sheet, `r${row}c${col}.${ext}`), Buffer.from(relative, 'utf8'));
+          await writeFile(join(sourceRoot, sheet, `r${row}c${col}.${ext}`), frameBytes);
         }
       }
     }
     if (options.replace) {
       const target = join(sourceRoot, ...options.replace.to.split('/'));
       await mkdir(dirname(target), { recursive: true });
-      await writeFile(target, Buffer.from(options.replace.to, 'utf8'));
+      await writeFile(target, await frameFixture('png', options.imageSize));
     }
     return vscode.Uri.file(sourceRoot);
   }
@@ -335,5 +361,63 @@ describe('CharacterRegistry storage transactions', () => {
     const normalizedChild = resolve(child);
     const relativePath = relative(normalizedParent, normalizedChild);
     return relativePath === '' || (!relativePath.startsWith('..') && !isAbsolute(relativePath));
+  }
+
+  async function frameFixture(ext: 'webp' | 'png', imageSize: { width: number; height: number } | undefined): Promise<Buffer> {
+    const width = imageSize?.width ?? 32;
+    const height = imageSize?.height ?? 32;
+    if (ext === 'png') return createSolidPng(width, height);
+    if (width !== 32 || height !== 32) throw new Error('The WebP test fixture is fixed at 32x32.');
+    return SOLID_WEBP;
+  }
+
+  function createSolidPng(width: number, height: number): Buffer {
+    const signature = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);
+    const ihdr = Buffer.alloc(13);
+    ihdr.writeUInt32BE(width, 0);
+    ihdr.writeUInt32BE(height, 4);
+    ihdr[8] = 8;
+    ihdr[9] = 6;
+    const row = Buffer.alloc(1 + width * 4);
+    for (let x = 0; x < width; x += 1) {
+      row[1 + x * 4] = 64;
+      row[2 + x * 4] = 128;
+      row[3 + x * 4] = 192;
+      row[4 + x * 4] = 255;
+    }
+    const raw = Buffer.concat(Array.from({ length: height }, () => row));
+    return Buffer.concat([
+      signature,
+      pngChunk('IHDR', ihdr),
+      pngChunk('IDAT', deflateSync(raw)),
+      pngChunk('IEND', Buffer.alloc(0)),
+    ]);
+  }
+
+  function pngChunk(type: string, data: Buffer): Buffer {
+    const typeBuffer = Buffer.from(type, 'ascii');
+    const length = Buffer.alloc(4);
+    length.writeUInt32BE(data.length, 0);
+    const crc = Buffer.alloc(4);
+    crc.writeUInt32BE(crc32(Buffer.concat([typeBuffer, data])), 0);
+    return Buffer.concat([length, typeBuffer, data, crc]);
+  }
+
+  function crc32(data: Buffer): number {
+    let crc = 0xffffffff;
+    for (const byte of data) {
+      crc ^= byte;
+      for (let bit = 0; bit < 8; bit += 1) {
+        crc = (crc >>> 1) ^ (0xedb88320 & -(crc & 1));
+      }
+    }
+    return (crc ^ 0xffffffff) >>> 0;
+  }
+
+  function readPngSize(data: Buffer): { width: number; height: number } {
+    return {
+      width: data.readUInt32BE(16),
+      height: data.readUInt32BE(20),
+    };
   }
 });

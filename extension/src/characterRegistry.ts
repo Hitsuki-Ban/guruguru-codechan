@@ -1,6 +1,8 @@
 import * as vscode from 'vscode';
+import { createHash } from 'node:crypto';
 import type { CharacterRecord, CompanionLayout, FrameExt } from './shared';
 import { SHEETS, validateAssetFileNames } from './assetValidation';
+import { normalizeImportedFrame } from './frameProcessor';
 import { DEFAULT_LAYOUT, LayoutValidationError, validateCompanionLayout } from './layout';
 
 const CHARACTERS_KEY = 'guruguru-codechan.characters';
@@ -104,7 +106,7 @@ export class CharacterRegistry {
     };
 
     try {
-      await copyValidatedFrames(source, targetRoot, validated.framePaths);
+      await writeNormalizedFrames(source, targetRoot, validated.framePaths, validated.ext);
       await writeManifest(targetRoot, record);
       const next = [...previousUserCharacters, record];
       await this.context.globalState.update(CHARACTERS_KEY, next);
@@ -204,16 +206,27 @@ async function collectCandidateFiles(root: vscode.Uri): Promise<string[]> {
   return files;
 }
 
-async function copyValidatedFrames(sourceRoot: vscode.Uri, targetRoot: vscode.Uri, framePaths: string[]): Promise<void> {
+async function writeNormalizedFrames(
+  sourceRoot: vscode.Uri,
+  targetRoot: vscode.Uri,
+  framePaths: string[],
+  ext: FrameExt,
+): Promise<void> {
+  const normalizedFrameCache = new Map<string, Uint8Array>();
   for (const relative of framePaths) {
     const [sheet, fileName] = relative.split('/');
     const targetSheet = vscode.Uri.joinPath(targetRoot, sheet);
     await vscode.workspace.fs.createDirectory(targetSheet);
-    await vscode.workspace.fs.copy(
-      vscode.Uri.joinPath(sourceRoot, sheet, fileName),
-      vscode.Uri.joinPath(targetRoot, sheet, fileName),
-      { overwrite: false },
-    );
+    const source = vscode.Uri.joinPath(sourceRoot, sheet, fileName);
+    const target = vscode.Uri.joinPath(targetRoot, sheet, fileName);
+    const sourceBytes = await vscode.workspace.fs.readFile(source);
+    const cacheKey = `${ext}:${createHash('sha256').update(sourceBytes).digest('base64url')}`;
+    let normalized = normalizedFrameCache.get(cacheKey);
+    if (!normalized) {
+      normalized = await normalizeImportedFrame(sourceBytes, ext);
+      normalizedFrameCache.set(cacheKey, normalized);
+    }
+    await vscode.workspace.fs.writeFile(target, normalized);
   }
 }
 

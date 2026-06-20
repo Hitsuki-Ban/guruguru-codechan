@@ -11,6 +11,19 @@ const MAX_WEBVIEW_CSS_BYTES = 8 * 1024;
 const MAX_SAMPLE_FRAME_BYTES = 450 * 1024;
 const MAX_SAMPLE_FRAME_TOTAL_BYTES = 52 * 1024 * 1024;
 const MAX_MARKETPLACE_PREVIEW_BYTES = 1_500_000;
+const MAX_VENDOR_TOTAL_BYTES = 3 * 1024 * 1024;
+const REQUIRED_VENDOR_ENTRIES = [
+  'extension/out/vendor/@jsquash/png/decode.js',
+  'extension/out/vendor/@jsquash/png/encode.js',
+  'extension/out/vendor/@jsquash/png/codec/pkg/squoosh_png_bg.wasm',
+  'extension/out/vendor/@jsquash/resize/index.js',
+  'extension/out/vendor/@jsquash/resize/lib/resize/pkg/squoosh_resize_bg.wasm',
+  'extension/out/vendor/@jsquash/webp/decode.js',
+  'extension/out/vendor/@jsquash/webp/encode.js',
+  'extension/out/vendor/@jsquash/webp/codec/dec/webp_dec.wasm',
+  'extension/out/vendor/@jsquash/webp/codec/enc/webp_enc.wasm',
+  'extension/out/vendor/node_modules/wasm-feature-detect/package.json',
+];
 const ALLOWED_EXACT = new Set([
   '[Content_Types].xml',
   'extension.vsixmanifest',
@@ -30,6 +43,7 @@ const ALLOWED_EXACT = new Set([
   'extension/out/commands.js',
   'extension/out/extension.js',
   'extension/out/focusTarget.js',
+  'extension/out/frameProcessor.js',
   'extension/out/layout.js',
   'extension/out/panel.js',
   'extension/out/shared.js',
@@ -126,10 +140,15 @@ for (const walkthroughMedia of [
 ]) {
   if (!zipEntries.has(walkthroughMedia)) fail(`missing ${walkthroughMedia}`);
 }
+for (const vendorEntry of REQUIRED_VENDOR_ENTRIES) {
+  if (!zipEntries.has(vendorEntry)) fail(`missing runtime vendor entry: ${vendorEntry}`);
+}
 const unexpected = entries.filter((entry) => {
   if (ALLOWED_EXACT.has(entry)) return false;
   if (/^extension\/media\/actions\/(dark|light)\/(import|lock|switch|trash)\.svg$/.test(entry)) return false;
   if (/^extension\/media\/walkthrough\/(asset-rights|open-companion-view|settings-and-assets)\.md$/.test(entry)) return false;
+  if (/^extension\/out\/vendor\/@jsquash\/(png|resize|webp)\//.test(entry)) return false;
+  if (/^extension\/out\/vendor\/node_modules\/wasm-feature-detect\//.test(entry)) return false;
   return !entry.startsWith('extension/media/sample-codechan/');
 });
 if (unexpected.length > 0) {
@@ -161,6 +180,12 @@ if (sampleTotalBytes > MAX_SAMPLE_FRAME_TOTAL_BYTES) {
 const largestSample = sampleEntries.reduce((largest, entry) => entry.compressedSize > largest.compressedSize ? entry : largest);
 if (largestSample.compressedSize > MAX_SAMPLE_FRAME_BYTES) {
   fail(`${largestSample.name} exceeds the ${MAX_SAMPLE_FRAME_BYTES} byte sample frame budget: ${largestSample.compressedSize}`);
+}
+
+const vendorEntries = entries.map((entry) => zipEntries.get(entry)).filter((entry) => entry?.name.startsWith('extension/out/vendor/'));
+const vendorTotalBytes = vendorEntries.reduce((sum, entry) => sum + entry.uncompressedSize, 0);
+if (vendorTotalBytes > MAX_VENDOR_TOTAL_BYTES) {
+  fail(`runtime vendor files exceed the ${MAX_VENDOR_TOTAL_BYTES} byte budget: ${vendorTotalBytes}`);
 }
 
 const packageJsonEntry = zipEntries.get('extension/package.json');

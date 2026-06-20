@@ -50,6 +50,8 @@ F/r0c0.webp ... F/r4c4.webp
 
 PNG is also accepted, but a character must use a single format only. Missing frames, mixed formats, duplicate character names, duplicate asset file names, or extra PNG/WebP frame files are rejected.
 
+During import, frames larger than 512 pixels on their longest edge are normalized to 512 pixels before they are stored in VS Code global extension storage. The original user-selected asset folder is not modified.
+
 ## Preview Notes
 
 - The companion runs inside a VS Code Webview view, not as an operating-system-level floating window.

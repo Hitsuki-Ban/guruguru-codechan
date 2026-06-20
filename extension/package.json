@@ -2,7 +2,7 @@
   "name": "guruguru-codechan",
   "displayName": "Guruguru Codechan",
   "description": "Run Codeちゃん and importable guruguru-style character assets in a dockable VS Code view.",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "publisher": "hitsuki-ban",
   "license": "SEE LICENSE IN LICENSE",
   "type": "commonjs",
@@ -160,7 +160,7 @@
   },
   "scripts": {
     "clean": "node ./scripts/clean-output.mjs",
-    "compile": "tsc -p ./tsconfig.json",
+    "compile": "tsc -p ./tsconfig.json && node ./scripts/copy-runtime-vendor.mjs",
     "build:webview": "vite build",
     "build": "pnpm clean && pnpm compile && pnpm build:webview",
     "test": "vitest run",
@@ -178,5 +178,11 @@
     "typescript": "^5.8.3",
     "vite": "^8.0.16",
     "vitest": "^3.2.4"
+  },
+  "dependencies": {
+    "@jsquash/png": "3.1.1",
+    "@jsquash/resize": "2.1.1",
+    "@jsquash/webp": "1.5.0",
+    "wasm-feature-detect": "1.8.0"
   }
 }
