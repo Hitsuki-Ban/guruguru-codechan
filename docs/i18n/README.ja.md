@@ -10,7 +10,7 @@ Codeちゃんはまばたきし、
 
 もちろん自分で用意したぐるぐる風キャラクター素材に差し替えることもできます。
 
-![Guruguru Codechan preview](../../extension/media/marketplace/codechan-view-v0.5.4.png)
+![Guruguru Codechan preview](../../extension/media/marketplace/codechan-view-v0.5.5.png)
 
 [English](../../README.md) | 日本語 | [简体中文](./README.zh-CN.md)
 

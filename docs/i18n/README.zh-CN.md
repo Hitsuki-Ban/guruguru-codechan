@@ -9,7 +9,7 @@ Codeちゃん 会眨眼，静静看着你工作，并在鼠标接近她时用视
 
 你也可以把它替换成自己的 guruguru 风格角色素材。
 
-![Guruguru Codechan preview](../../extension/media/marketplace/codechan-view-v0.5.4.png)
+![Guruguru Codechan preview](../../extension/media/marketplace/codechan-view-v0.5.5.png)
 
 [English](../../README.md) | [日本語](./README.ja.md) | 简体中文
 

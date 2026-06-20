@@ -10,11 +10,11 @@
     {
       "path": "media/icon.png",
       "role": "marketplace-icon",
-      "bytes": 33263,
-      "sha256": "6ea063907a4bb29c97fe6650032fb4884555198d810b33e274580440011812b1"
+      "bytes": 63020,
+      "sha256": "9309d3830c2e7bb31da2b7b66dab69b3e7b8252584ea428493fd876b47f6bd2f"
     },
     {
-      "path": "media/marketplace/codechan-view-v0.5.4.png",
+      "path": "media/marketplace/codechan-view-v0.5.5.png",
       "role": "marketplace-preview-image",
       "bytes": 121138,
       "sha256": "e8941f5c6579933ff4c8a919ccf0a43ee17b3ceed3807f41d4a364c0f0818720"

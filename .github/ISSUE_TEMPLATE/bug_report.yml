@@ -20,7 +20,7 @@ body:
     attributes:
       label: Install source / VSIX or Marketplace version
       description: Tell us whether this came from the Visual Studio Marketplace, a GitHub Release VSIX, or a local build.
-      placeholder: "Visual Studio Marketplace v0.5.4"
+      placeholder: "Visual Studio Marketplace v0.5.5"
     validations:
       required: true
   - type: input
