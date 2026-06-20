@@ -1,0 +1,76 @@
+name: Bug report
+description: Report a reproducible Guruguru Companion bug.
+title: "[Bug]: "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping test Guruguru Companion. Please avoid attaching proprietary character assets unless you have the right to share them in a public issue.
+  - type: input
+    id: extension-version
+    attributes:
+      label: Guruguru Companion version
+      description: Example: 0.4.11.
+      placeholder: "0.4.11"
+    validations:
+      required: true
+  - type: input
+    id: install-source
+    attributes:
+      label: Install source / VSIX or Marketplace version
+      description: Tell us whether this came from a GitHub Release VSIX, local build, or Marketplace preview.
+      placeholder: "GitHub Release VSIX v0.4.11"
+    validations:
+      required: true
+  - type: input
+    id: vscode-version
+    attributes:
+      label: VS Code version
+      placeholder: "Help: About output or code --version"
+    validations:
+      required: true
+  - type: input
+    id: operating-system
+    attributes:
+      label: Operating system
+      placeholder: "Windows 11 / macOS / Linux distribution"
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction-steps
+    attributes:
+      label: Reproduction steps
+      description: List the smallest sequence that reproduces the behavior.
+      placeholder: |
+        1. Install ...
+        2. Open ...
+        3. Toggle ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: screenshots-or-logs
+    attributes:
+      label: Screenshots, recordings, or logs
+      description: Add visual evidence, Developer Tools console output, or extension host logs if useful.
+    validations:
+      required: false
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Confirmation
+      options:
+        - label: I checked that this issue is reproducible on the version listed above.
+          required: true

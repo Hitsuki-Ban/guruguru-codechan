@@ -1,0 +1,12 @@
+{
+  "name": "guruguru-codechan-vsix-smoke-harness",
+  "displayName": "Guruguru Codechan VSIX Smoke Harness",
+  "version": "0.0.0",
+  "publisher": "hitsuki-ban",
+  "private": true,
+  "engines": {
+    "vscode": "^1.100.0"
+  },
+  "activationEvents": [],
+  "main": "./extension.js"
+}

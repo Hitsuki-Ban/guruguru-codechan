@@ -1,0 +1,182 @@
+{
+  "name": "guruguru-codechan",
+  "displayName": "Guruguru Codechan",
+  "description": "Run Codeちゃん and importable guruguru-style character assets in a dockable VS Code view.",
+  "version": "0.5.0",
+  "publisher": "hitsuki-ban",
+  "license": "SEE LICENSE IN LICENSE",
+  "type": "commonjs",
+  "preview": true,
+  "pricing": "Free",
+  "icon": "media/icon.png",
+  "galleryBanner": {
+    "color": "#202124",
+    "theme": "dark"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Hitsuki-Ban/guruguru-codechan.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Hitsuki-Ban/guruguru-codechan/issues"
+  },
+  "homepage": "https://github.com/Hitsuki-Ban/guruguru-codechan#readme",
+  "qna": false,
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "guruguru",
+    "codechan",
+    "avatar",
+    "companion",
+    "pet",
+    "webview"
+  ],
+  "engines": {
+    "vscode": "^1.100.0",
+    "node": ">=22.13.0"
+  },
+  "extensionKind": [
+    "ui"
+  ],
+  "main": "./out/extension.js",
+  "files": [
+    "out",
+    "dist",
+    "media",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "SUPPORT.md",
+    "ASSET_LICENSE.md",
+    "ASSET_PROVENANCE.json",
+    "package.json"
+  ],
+  "activationEvents": [
+    "onCommand:guruguru-codechan.openCanvas",
+    "onCommand:guruguru-codechan.switchCharacter",
+    "onCommand:guruguru-codechan.toggleSettings",
+    "onCommand:guruguru-codechan.setMouthLevel",
+    "onView:guruguru-codechan.codechanView"
+  ],
+  "contributes": {
+    "viewsContainers": {
+      "panel": [
+        {
+          "id": "guruguru-codechan-container",
+          "title": "Guruguru Codechan",
+          "icon": "media/icon.png"
+        }
+      ]
+    },
+    "views": {
+      "guruguru-codechan-container": [
+        {
+          "type": "webview",
+          "id": "guruguru-codechan.codechanView",
+          "name": "Codeちゃん"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "guruguru-codechan.switchCharacter",
+          "when": "view == guruguru-codechan.codechanView",
+          "group": "navigation@1"
+        },
+        {
+          "command": "guruguru-codechan.toggleSettings",
+          "when": "view == guruguru-codechan.codechanView",
+          "group": "navigation@2"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "guruguru-codechan.openCanvas",
+        "title": "Open Codechan View",
+        "category": "Guruguru Codechan"
+      },
+      {
+        "command": "guruguru-codechan.switchCharacter",
+        "title": "Switch Character",
+        "category": "Guruguru Codechan",
+        "icon": {
+          "dark": "media/actions/dark/switch.svg",
+          "light": "media/actions/light/switch.svg"
+        }
+      },
+      {
+        "command": "guruguru-codechan.toggleSettings",
+        "title": "Toggle Codechan Settings",
+        "category": "Guruguru Codechan",
+        "icon": "$(settings-gear)"
+      }
+    ],
+    "walkthroughs": [
+      {
+        "id": "guruguru-codechan.gettingStarted",
+        "title": "Get Started with Guruguru Codechan",
+        "description": "Set up the dockable VS Code Codechan view, settings layer, and local character assets.",
+        "steps": [
+          {
+            "id": "open-codechan-view",
+            "title": "Open the Codechan view",
+            "description": "Open the dockable Codechan view from the Command Palette.\n[Open Codechan View](command:guruguru-codechan.openCanvas)",
+            "media": {
+              "markdown": "media/walkthrough/open-companion-view.md"
+            },
+            "completionEvents": [
+              "onCommand:guruguru-codechan.openCanvas"
+            ]
+          },
+          {
+            "id": "adjust-settings-and-assets",
+            "title": "Tune settings and local assets",
+            "description": "Use the settings layer to adjust position, zoom, gaze lock, and import or delete local character assets.\n[Toggle Codechan Settings](command:guruguru-codechan.toggleSettings)",
+            "media": {
+              "markdown": "media/walkthrough/settings-and-assets.md"
+            },
+            "completionEvents": [
+              "onCommand:guruguru-codechan.toggleSettings"
+            ]
+          },
+          {
+            "id": "confirm-asset-rights",
+            "title": "Confirm character asset rights",
+            "description": "Bundled sample assets are non-commercial. User-imported assets remain governed by the user's or licensor's rights.\n[Read bundled asset license](https://github.com/Hitsuki-Ban/guruguru-codechan/blob/main/extension/ASSET_LICENSE.md)",
+            "media": {
+              "markdown": "media/walkthrough/asset-rights.md"
+            },
+            "completionEvents": [
+              "onLink:https://github.com/Hitsuki-Ban/guruguru-codechan/blob/main/extension/ASSET_LICENSE.md"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "scripts": {
+    "clean": "node ./scripts/clean-output.mjs",
+    "compile": "tsc -p ./tsconfig.json",
+    "build:webview": "vite build",
+    "build": "pnpm clean && pnpm compile && pnpm build:webview",
+    "test": "vitest run",
+    "package": "pnpm build && node ../scripts/package-extension.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.14",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@types/vscode": "^1.100.0",
+    "@vitejs/plugin-react": "^6.0.2",
+    "@vscode/vsce": "^3.6.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "typescript": "^5.8.3",
+    "vite": "^8.0.16",
+    "vitest": "^3.2.4"
+  }
+}

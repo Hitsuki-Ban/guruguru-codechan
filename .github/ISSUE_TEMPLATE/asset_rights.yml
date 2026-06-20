@@ -1,0 +1,55 @@
+name: Asset rights or import report
+description: Report an asset import problem or bundled/user-imported asset rights question.
+title: "[Asset]: "
+labels: ["asset-rights", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Bundled sample assets are non-commercial; user-imported assets remain governed by the user or licensor rights. Do not attach proprietary character assets unless you have the right to share them in a public issue.
+  - type: dropdown
+    id: report-type
+    attributes:
+      label: Report type
+      options:
+        - Bundled sample asset rights
+        - User-imported asset rights
+        - Import validation problem
+    validations:
+      required: true
+  - type: input
+    id: asset-owner-or-licensor
+    attributes:
+      label: Asset owner or licensor
+      description: Name the asset owner, licensor, or state that this concerns the bundled sample assets.
+      placeholder: "Owner, licensor, or bundled sample assets"
+    validations:
+      required: true
+  - type: textarea
+    id: asset-source-and-permission
+    attributes:
+      label: Asset source and permission summary
+      description: Summarize the source and the permission status relevant to this report.
+    validations:
+      required: true
+  - type: textarea
+    id: frame-set-details
+    attributes:
+      label: Character frame set details
+      description: For import reports, describe the A-F/r0c0..r4c4 PNG/WebP frame set without attaching private assets unless you can share them publicly.
+    validations:
+      required: false
+  - type: textarea
+    id: extension-context
+    attributes:
+      label: Extension version and context
+      description: Include the Guruguru Companion version, install source, VS Code version, and operating system if this is also an import bug.
+    validations:
+      required: false
+  - type: checkboxes
+    id: rights-confirmation
+    attributes:
+      label: Rights confirmation
+      options:
+        - label: I have the right to share the attached or described asset details in this issue.
+          required: true

@@ -1,0 +1,320 @@
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+body {
+  background: var(--vscode-editor-background);
+  color: var(--vscode-editor-foreground);
+  font-family: var(--vscode-font-family);
+  overscroll-behavior: none;
+}
+
+button {
+  border: 1px solid var(--vscode-button-border, transparent);
+  border-radius: 6px;
+  background: var(--vscode-button-secondaryBackground);
+  color: var(--vscode-button-secondaryForeground);
+  font: inherit;
+  font-size: 12px;
+  line-height: 1;
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: var(--vscode-button-secondaryHoverBackground);
+}
+
+button:active {
+  transform: translateY(1px) scale(0.97);
+}
+
+.loading,
+.stage {
+  width: 100%;
+  height: 100%;
+}
+
+.loading {
+  display: grid;
+  place-items: center;
+  color: var(--vscode-descriptionForeground);
+  font-size: 13px;
+}
+
+.stage {
+  position: relative;
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--vscode-editor-foreground) 5%, transparent) 1px, transparent 1px),
+    linear-gradient(0deg, color-mix(in srgb, var(--vscode-editor-foreground) 5%, transparent) 1px, transparent 1px),
+    var(--vscode-editor-background);
+  background-size: 24px 24px;
+  user-select: none;
+  overscroll-behavior: none;
+}
+
+.pet {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  touch-action: none;
+  pointer-events: none;
+}
+
+.frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.frame.active {
+  opacity: 1;
+}
+
+.settingsUi {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.triangleButton,
+.assetButton,
+.settingsButton,
+.gazeLockMarker {
+  border-color: color-mix(in srgb, var(--vscode-panel-border) 86%, transparent);
+  background: color-mix(in srgb, var(--vscode-editor-background) 82%, transparent);
+  color: var(--vscode-editor-foreground);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.22);
+  transition: background 120ms ease, border-color 120ms ease, transform 90ms ease, opacity 120ms ease;
+  pointer-events: auto;
+}
+
+.triangleButton:hover,
+.assetButton:hover,
+.settingsButton:hover,
+.gazeLockMarker:hover {
+  border-color: var(--vscode-focusBorder);
+  background: color-mix(in srgb, var(--vscode-button-secondaryHoverBackground) 72%, var(--vscode-editor-background));
+}
+
+.triangleButton:focus-visible,
+.assetButton:focus-visible,
+.settingsButton:focus-visible,
+.gazeLockMarker:focus-visible,
+.zoomSlider:focus-visible {
+  outline: 2px solid var(--vscode-focusBorder);
+  outline-offset: 2px;
+}
+
+.triangleButton {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  padding: 0;
+  font-size: 23px;
+  font-weight: 600;
+  line-height: 1;
+  opacity: 0.78;
+}
+
+.triangleButton:hover {
+  background: color-mix(in srgb, var(--vscode-editor-foreground) 8%, transparent);
+  opacity: 0.94;
+}
+
+.moveUp {
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.moveLeft {
+  left: 68px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.moveRight {
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.moveDown {
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.moveUp:active,
+.moveDown:active {
+  transform: translateX(-50%) translateY(1px) scale(0.97);
+}
+
+.moveLeft:active,
+.moveRight:active {
+  transform: translateY(-50%) translateY(1px) scale(0.97);
+}
+
+.zoomRail {
+  position: absolute;
+  left: 8px;
+  top: 42px;
+  bottom: 28px;
+  width: 52px;
+  pointer-events: auto;
+}
+
+.zoomRail::before {
+  content: none;
+}
+
+.zoomSlider {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 22px;
+  z-index: 1;
+  width: 18px;
+  height: auto;
+  accent-color: color-mix(in srgb, var(--vscode-editor-foreground) 48%, transparent);
+  direction: rtl;
+  opacity: 0.92;
+  transform: translateX(-50%);
+  writing-mode: vertical-lr;
+}
+
+.zoomValue {
+  position: absolute;
+  left: 2px;
+  bottom: 0;
+  min-width: 50px;
+  color: color-mix(in srgb, var(--vscode-editor-foreground) 70%, transparent);
+  font-size: 12px;
+  line-height: 1;
+}
+
+.assetTools {
+  position: absolute;
+  right: 16px;
+  top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: calc(100% - 24px);
+  pointer-events: auto;
+}
+
+.characterName {
+  position: absolute;
+  right: 18px;
+  bottom: 12px;
+  max-width: min(180px, calc(100% - 96px));
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: color-mix(in srgb, var(--vscode-editor-foreground) 64%, transparent);
+  font-size: 13px;
+  pointer-events: none;
+}
+
+.assetButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 62px;
+  height: 30px;
+  padding: 0 11px;
+  border-radius: 7px;
+  color: color-mix(in srgb, var(--vscode-editor-foreground) 58%, transparent);
+  opacity: 0.82;
+  white-space: nowrap;
+}
+
+.assetButton:hover {
+  background: color-mix(in srgb, var(--vscode-editor-foreground) 8%, transparent);
+  color: var(--vscode-editor-foreground);
+  opacity: 1;
+}
+
+.assetButton:active {
+  transform: translateY(1px) scale(0.94);
+}
+
+.assetLabel {
+  font-size: 11px;
+  line-height: 1;
+}
+
+.settingsButton {
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  opacity: 0.86;
+}
+
+.settingsButton.compact {
+  white-space: nowrap;
+}
+
+.lockPrompt {
+  position: absolute;
+  z-index: 12;
+  transform: translate(-50%, calc(-100% - 10px));
+}
+
+.gazeLockMarker {
+  position: absolute;
+  z-index: 11;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 52px;
+  height: 28px;
+  padding: 0 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  line-height: 1;
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+}
+
+.gazeLockMarker:active {
+  transform: translate(-50%, -50%) translateY(1px) scale(0.96);
+}
+
+@media (max-width: 300px) {
+  .assetTools {
+    gap: 5px;
+  }
+
+  .assetButton {
+    min-width: 52px;
+    padding: 0 8px;
+  }
+
+  .characterName {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .triangleButton,
+  .assetButton,
+  .settingsButton,
+  .gazeLockMarker {
+    transition: none;
+  }
+}

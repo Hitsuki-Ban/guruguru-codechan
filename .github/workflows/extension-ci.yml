@@ -1,0 +1,67 @@
+name: Extension CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: extension-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  package:
+    name: Test And Package VSIX
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 11.5.2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '22.13.0'
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Test extension
+        run: pnpm extension:test
+
+      - name: Smoke real VS Code extension host
+        run: xvfb-run -a pnpm extension:vscode-smoke
+
+      - name: Package extension
+        run: pnpm extension:package
+
+      - name: Verify VSIX artifact hygiene
+        run: pnpm verify:vsix-artifact-hygiene
+
+      - name: Verify VSIX contents
+        run: pnpm verify:extension-package
+
+      - name: Smoke packaged VSIX install
+        run: xvfb-run -a pnpm extension:vsix-install-smoke
+
+      - name: Resolve extension version
+        id: extension-version
+        run: echo "version=$(node -p "require('./extension/package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Upload VSIX artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: guruguru-codechan-vsix
+          path: extension/guruguru-codechan-${{ steps.extension-version.outputs.version }}.vsix
+          if-no-files-found: error
