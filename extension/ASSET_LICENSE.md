@@ -8,7 +8,7 @@ Program code is licensed under the MIT License. See `LICENSE`.
 
 ## Bundled Sample Character Assets
 
-The bundled sample character assets under `media/sample-codechan/`, the Marketplace icon at `media/icon.png`, and the Marketplace preview image at `media/marketplace/codechan-view.png` derived from that sample character are not covered by the MIT License.
+The bundled sample character assets under `media/sample-codechan/`, the Marketplace icon at `media/icon.png`, and Marketplace preview media under `media/marketplace/` derived from that sample character are not covered by the MIT License.
 
 The exact bundled sample asset set is recorded in `ASSET_PROVENANCE.json`.
 

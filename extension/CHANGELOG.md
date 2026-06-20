@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.4
+
+- Replaces the bundled Codeちゃん sample assets with the 512px-normalized v7 asset set.
+- Refreshes the Marketplace title image with clearer reader-facing copy and the latest sample art.
+- Aligns the English public documentation with the updated Japanese copy and fixes small public-doc wording issues.
+
 ## 0.5.3
 
 - Adds short Marketplace demo GIFs for pointer interaction and editor-cursor tracking.

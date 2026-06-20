@@ -1,6 +1,6 @@
 {
   "extension.displayName": "Guruguru Codechan",
-  "extension.description": "Codeちゃんは見ている。 A dockable VS Code companion that quietly watches your editor.",
+  "extension.description": "Codeちゃんは見ている。 A dockable VS Code companion that quietly watches your work.",
   "views.container.title": "Guruguru Codechan",
   "views.codechan.name": "Codeちゃん",
   "commands.category": "Guruguru Codechan",

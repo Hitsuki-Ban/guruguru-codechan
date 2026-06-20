@@ -3,11 +3,11 @@
 **Codeちゃんは見ている。**
 
 Guruguru Codechan is a VS Code extension that adds a dockable Codeちゃん companion view to your workbench.
-Codeちゃん blinks, quietly watches you work, and turns her gaze when the pointer comes close.
+Codeちゃん blinks, quietly watches your work, and follows the mouse with her gaze when it comes close.
 
-When work gets tiring, take a small break and play with Codeちゃん for a moment.
+When you get tired, take a short break and play with Codeちゃん.
 
-You can also replace her with your own guruguru-style character assets.
+Of course, you can also replace her with your own guruguru-style character assets.
 
 ![Guruguru Codechan preview](./extension/media/marketplace/codechan-view.png)
 
@@ -27,7 +27,7 @@ English | [日本語](./docs/i18n/README.ja.md) | [简体中文](./docs/i18n/REA
 
 - Shows Codeちゃん in a dockable VS Code view.
 - Codeちゃん follows the pointer inside the view and the editor cursor when VS Code exposes enough information.
-- Lets you move, scale, and gaze-lock the character from a compact settings layer.
+- Lets you adjust position, scale, and gaze lock from settings.
 - Lets you import your own 150-frame guruguru-style character assets.
 
 ## Install
@@ -65,7 +65,10 @@ To import the folder:
 4. Select the folder that contains `A` through `F`.
 5. Enter a character name.
 
-The extension validates the frame names, rejects missing or mixed-format assets, resizes frames larger than 512px on their longest edge, and stores the imported copy in VS Code global extension storage. Your original folder is not changed.
+The extension validates the frame names and rejects missing frames or mixed formats.
+Frames larger than 512px are resized to 512px on their longest edge before they are saved.
+
+Your original asset folder is not changed.
 
 ## What Changed For VS Code
 
@@ -73,16 +76,17 @@ This extension follows the browser avatar idea, then adjusts it for everyday use
 
 - Performance: the runtime shows only the active frame, and imported large images are normalized to 512px to reduce resource use.
 - Input: gaze tracking uses pointer and editor-selection information available through the public VS Code API.
-- Mouth animation: mouth frames react to typing today, and the `mouthLevel` channel can be connected to TTS later.
+- Mouth animation: mouth frames currently react to keyboard input, and the `mouthLevel` channel can be connected to TTS later.
 
 VS Code does not expose global mouse coordinates or exact positions for every workbench panel.
 Because of that, Codeちゃん cannot perform perfectly accurate global mouse tracking.
 
-### Quick Troubleshooting
+### Troubleshooting
 
 #### Codeちゃん is not looking the right way in the editor
 
-Move the pointer through the Codeちゃん view once, then return to the editor. Codeちゃん estimates the editor direction from the last pointer-exit direction when exact workbench geometry is not available.
+Move the pointer through the Codeちゃん view once, then return to the editor.
+Codeちゃん estimates the editor direction from the last direction where the mouse left the view.
 
 #### I want Codeちゃん to look in one fixed direction
 
