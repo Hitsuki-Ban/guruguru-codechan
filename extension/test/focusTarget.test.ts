@@ -70,40 +70,40 @@ describe('pointerFocusVector', () => {
 });
 
 describe('editorCursorFocusVector', () => {
-  it('uses the latest left exit vector while preserving cursor depth and row', () => {
+  it('locks cardinal left and right editor tracking to the outer columns', () => {
     const farTop = cellFor(editorCursorFocusVector({ x: -0.9, y: 0 }, 0.05, 0.1));
     const nearBottom = cellFor(editorCursorFocusVector({ x: -0.9, y: 0 }, 0.95, 0.9));
+    const rightTop = cellFor(editorCursorFocusVector({ x: 0.9, y: 0 }, 0.05, 0.1));
+    const rightBottom = cellFor(editorCursorFocusVector({ x: 0.9, y: 0 }, 0.95, 0.9));
 
-    expect(farTop.col).toBeLessThan(nearBottom.col);
+    expect(farTop.col).toBe(0);
+    expect(nearBottom.col).toBe(0);
     expect(farTop.row).toBeLessThan(nearBottom.row);
+    expect(rightTop.col).toBe(4);
+    expect(rightBottom.col).toBe(4);
+    expect(rightTop.row).toBeLessThan(rightBottom.row);
   });
 
-  it('uses the latest above exit vector while preserving cursor column and depth', () => {
+  it('locks cardinal above and below editor tracking to the outer rows', () => {
     const farLeft = cellFor(editorCursorFocusVector({ x: 0, y: -0.9 }, 0.1, 0.05));
     const nearRight = cellFor(editorCursorFocusVector({ x: 0, y: -0.9 }, 0.9, 0.95));
+    const belowLeft = cellFor(editorCursorFocusVector({ x: 0, y: 0.9 }, 0.1, 0.05));
+    const belowRight = cellFor(editorCursorFocusVector({ x: 0, y: 0.9 }, 0.9, 0.95));
 
-    expect(farLeft.row).toBeLessThan(nearRight.row);
+    expect(farLeft.row).toBe(0);
+    expect(nearRight.row).toBe(0);
     expect(farLeft.col).toBeLessThan(nearRight.col);
+    expect(belowLeft.row).toBe(4);
+    expect(belowRight.row).toBe(4);
+    expect(belowLeft.col).toBeLessThan(belowRight.col);
   });
 
-  it('keeps cardinal vertical exits vertically dominant while preserving cursor column', () => {
-    const aboveLeft = editorCursorFocusVector({ x: 0, y: -0.9 }, 0.05, 0.5);
-    const belowRight = editorCursorFocusVector({ x: 0, y: 0.9 }, 0.95, 0.5);
+  it('treats near-cardinal exits as cardinal for stable editor tracking', () => {
+    const left = cellFor(editorCursorFocusVector({ x: -0.9, y: 0.18 }, 0.95, 0.5));
+    const above = cellFor(editorCursorFocusVector({ x: 0.18, y: -0.9 }, 0.5, 0.95));
 
-    expect(aboveLeft.x).toBeLessThan(0);
-    expect(aboveLeft.y).toBeLessThan(0);
-    expect(Math.abs(aboveLeft.y)).toBeGreaterThan(Math.abs(aboveLeft.x));
-    expect(belowRight.x).toBeGreaterThan(0);
-    expect(belowRight.y).toBeGreaterThan(0);
-    expect(Math.abs(belowRight.y)).toBeGreaterThan(Math.abs(belowRight.x));
-  });
-
-  it('keeps strong cardinal vertical exits on the outer asset row at editor center', () => {
-    const aboveCenter = cellFor(editorCursorFocusVector({ x: 0, y: -0.95 }, 0.5, 0.5));
-    const belowCenter = cellFor(editorCursorFocusVector({ x: 0, y: 0.95 }, 0.5, 0.5));
-
-    expect(aboveCenter).toEqual({ row: 0, col: 2 });
-    expect(belowCenter).toEqual({ row: 4, col: 2 });
+    expect(left.col).toBe(0);
+    expect(above.row).toBe(0);
   });
 
   it('keeps diagonal exit vectors as the editor cursor baseline', () => {
@@ -148,6 +148,20 @@ describe('editorCursorLocalPosition', () => {
     expect(position!.y).toBeLessThan(0.55);
   });
 
+  it('uses the current wrapped visual row length for horizontal cursor position', () => {
+    const position = editorCursorLocalPosition({
+      positionLine: 4,
+      positionCharacter: 170,
+      visibleLines: [{ line: 4, text: 'x'.repeat(200) }],
+      tabSize: 4,
+      wrapColumn: 80,
+    });
+
+    expect(position).toBeDefined();
+    expect(position!.x).toBeGreaterThan(0.2);
+    expect(position!.x).toBeLessThan(0.3);
+  });
+
   it('places later wrapped visual rows lower than earlier rows', () => {
     const visibleLines = [{ line: 4, text: 'x'.repeat(200) }];
     const firstRow = editorCursorLocalPosition({
@@ -168,6 +182,6 @@ describe('editorCursorLocalPosition', () => {
     expect(firstRow).toBeDefined();
     expect(thirdRow).toBeDefined();
     expect(thirdRow!.y).toBeGreaterThan(firstRow!.y);
-    expect(thirdRow!.x).toBeLessThan(0.2);
+    expect(thirdRow!.x).toBeGreaterThan(0.2);
   });
 });

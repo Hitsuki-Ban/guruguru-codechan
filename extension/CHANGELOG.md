@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.8
+
+- Improves editor-cursor gaze stability after the pointer leaves the companion view.
+- Keeps straight left/right exits on the outer animation columns and straight top/bottom exits on the outer rows.
+- Improves wrapped-line cursor position estimates for long editor lines.
+
 ## 0.5.7
 
 - Adds a Tweaks panel with tracking range, tracking speed, keyboard mouth sync, and auto blink controls.

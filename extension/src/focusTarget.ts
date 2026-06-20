@@ -34,8 +34,6 @@ const CROSS_AXIS_LIMIT = 0.9;
 const VERTICAL_CROSS_AXIS_LIMIT = 0.45;
 const DIAGONAL_COMPONENT_MIN = 0.25;
 const STRONG_VERTICAL_EXIT_BLEND = 0.35;
-const MIN_VISIBLE_COLUMNS = 80;
-const MAX_VISIBLE_COLUMNS = 240;
 const POINTER_GAZE_Y_RATIO = 0.44;
 const POINTER_RANGE_RATIO = 0.56;
 
@@ -59,6 +57,18 @@ export function editorCursorFocusVector(exitVector: FocusVector, localX: number,
 
   const x = clamp(localX, 0, 1);
   const y = clamp(localY, 0, 1);
+  if (Math.abs(exit.x) >= Math.abs(exit.y) && Math.abs(exit.y) < DIAGONAL_COMPONENT_MIN) {
+    return {
+      x: Math.sign(exit.x),
+      y: cursorAxis(y),
+    };
+  }
+  if (Math.abs(exit.y) > Math.abs(exit.x) && Math.abs(exit.x) < DIAGONAL_COMPONENT_MIN) {
+    return {
+      x: cursorAxis(x),
+      y: Math.sign(exit.y),
+    };
+  }
   if (Math.abs(exit.x) >= DIAGONAL_COMPONENT_MIN && Math.abs(exit.y) >= DIAGONAL_COMPONENT_MIN) {
     return normalizeFocusVector(signedDepth(exit.x, x), signedDepth(exit.y, y));
   }
@@ -87,29 +97,36 @@ export function editorCursorLocalPosition(input: EditorCursorLocalPositionInput)
   let rowsBeforeCursor = 0;
   let cursorRow = 0;
   let cursorColumn = 0;
-  let maxColumn = input.positionCharacter + 12;
+  let cursorRowLength = 0;
   let foundCursorLine = false;
 
   for (const line of input.visibleLines) {
     const lineColumn = visualColumn(line.text, undefined, tabSize);
     const rowCount = visualRowCount(lineColumn, wrapColumn);
-    maxColumn = Math.max(maxColumn, lineColumn);
     if (line.line < input.positionLine) {
       rowsBeforeCursor += rowCount;
     } else if (line.line === input.positionLine) {
       foundCursorLine = true;
       const character = Math.min(input.positionCharacter, line.text.length);
       const visualCursorColumn = visualColumn(line.text, character, tabSize);
-      cursorRow = wrapColumn ? Math.min(rowCount - 1, Math.floor(Math.max(0, visualCursorColumn - 1) / wrapColumn)) : 0;
-      cursorColumn = wrapColumn ? visualCursorColumn - cursorRow * wrapColumn : visualCursorColumn;
+      if (wrapColumn) {
+        cursorRow = Math.min(rowCount - 1, Math.floor(Math.max(0, visualCursorColumn - 1) / wrapColumn));
+        const rowStart = cursorRow * wrapColumn;
+        const rowEnd = Math.min(lineColumn, rowStart + wrapColumn);
+        cursorColumn = clamp(visualCursorColumn - rowStart, 0, Math.max(0, rowEnd - rowStart));
+        cursorRowLength = Math.max(0, rowEnd - rowStart);
+      } else {
+        cursorRow = 0;
+        cursorColumn = visualCursorColumn;
+        cursorRowLength = lineColumn;
+      }
     }
     totalRows += rowCount;
   }
 
   if (!foundCursorLine) return undefined;
-  const visibleColumns = wrapColumn ?? clamp(maxColumn + 2, MIN_VISIBLE_COLUMNS, MAX_VISIBLE_COLUMNS);
   return {
-    x: clamp((cursorColumn + 0.5) / visibleColumns, 0, 1),
+    x: cursorLinePosition(cursorColumn, cursorRowLength),
     y: clamp((rowsBeforeCursor + cursorRow + 0.5) / Math.max(1, totalRows), 0, 1),
   };
 }
@@ -129,6 +146,15 @@ export function visualColumn(text: string, character: number | undefined, tabSiz
 
 function crossAxis(value: number, limit = CROSS_AXIS_LIMIT): number {
   return lerp(-limit, limit, value);
+}
+
+function cursorAxis(value: number): number {
+  return lerp(-1, 1, value);
+}
+
+function cursorLinePosition(column: number, rowLength: number): number {
+  if (rowLength <= 0) return 0.5;
+  return clamp(column / rowLength, 0, 1);
 }
 
 function signedDepth(component: number, value: number): number {
