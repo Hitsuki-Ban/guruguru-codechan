@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.2
+
+- Adds a default character setting with Default and Random launch modes.
+- Adds a Random mode blacklist that excludes Codeちゃん when other characters are available.
+- Reserves Default and Random so imported characters cannot use those names.
+
 ## 0.6.1
 
 - Shows a loading screen while importing or switching character assets.

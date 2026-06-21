@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { createHash } from 'node:crypto';
 import type { CharacterRecord, CompanionLayout, FrameExt } from './shared';
 import { SHEETS, validateAssetFileNames } from './assetValidation';
+import { isReservedCharacterName } from './characterSelection';
 import { normalizeImportedFrame } from './frameProcessor';
 import { DEFAULT_LAYOUT, LayoutValidationError, validateCompanionLayout } from './layout';
 
@@ -78,6 +79,9 @@ export class CharacterRegistry {
   async importCharacter(source: vscode.Uri, name: string): Promise<CharacterRecord> {
     const cleanName = name.trim();
     if (cleanName.length === 0) throw new Error('Character name is required.');
+    if (isReservedCharacterName(cleanName)) {
+      throw new Error(`Character name is reserved for launch settings: ${cleanName}`);
+    }
     if (this.all().some((character) => character.name.toLocaleLowerCase() === cleanName.toLocaleLowerCase())) {
       throw new Error(`Character name already exists: ${cleanName}`);
     }

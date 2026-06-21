@@ -3,6 +3,12 @@ import { COLS, ROWS, SHEETS } from './assetValidation';
 import { CharacterRegistry } from './characterRegistry';
 import { COMMANDS } from './commands';
 import {
+  parseCharacterLaunchSettings,
+  resolveConfiguredCharacterId,
+  type CharacterLaunchSettings,
+  CharacterSelectionError,
+} from './characterSelection';
+import {
   editorCursorFocusVector,
   editorCursorLocalPosition,
   normalizeFocusVector,
@@ -29,24 +35,32 @@ export class CompanionPanel implements vscode.WebviewViewProvider {
   private focusSource: FocusTargetSource = 'workbench';
   private externalFocusVector: FocusVector = workbenchFocusVector();
   private mouthLevel: 0 | 1 | 2 = 0;
+  private applyLaunchSettingsBeforeInit = true;
+  private nextResolveShouldApplyLaunchSettings = true;
 
   constructor(
     private readonly context: vscode.ExtensionContext,
     private readonly registry: CharacterRegistry,
   ) {}
 
-  async open(options?: { preserveFocus?: boolean }): Promise<void> {
+  async open(options?: { preserveFocus?: boolean; applyLaunchSettings?: boolean }): Promise<void> {
+    const hadView = this.view !== undefined;
+    this.nextResolveShouldApplyLaunchSettings = options?.applyLaunchSettings === true;
     if (options?.preserveFocus) {
       await vscode.commands.executeCommand(`${CompanionPanel.viewType}.focus`, { preserveFocus: true });
     } else {
       await vscode.commands.executeCommand(`${CompanionPanel.viewType}.focus`);
     }
+    if (hadView) this.applyLaunchSettingsBeforeInit = options?.applyLaunchSettings === true;
+    this.nextResolveShouldApplyLaunchSettings = true;
     await this.postInit();
     await this.postFocusTarget();
   }
 
   resolveWebviewView(webviewView: vscode.WebviewView): void {
     this.view = webviewView;
+    this.applyLaunchSettingsBeforeInit = this.nextResolveShouldApplyLaunchSettings;
+    this.nextResolveShouldApplyLaunchSettings = true;
     webviewView.webview.options = {
       enableScripts: true,
       localResourceRoots: [
@@ -59,7 +73,7 @@ export class CompanionPanel implements vscode.WebviewViewProvider {
     this.updateViewTitle(this.registry.current().name);
 
     const messageSubscription = webviewView.webview.onDidReceiveMessage((message: unknown) => {
-      void this.handleRawMessage(message);
+      void this.handleRawMessage(message).catch((error: unknown) => this.reportError(error));
     });
     webviewView.onDidDispose(() => {
       messageSubscription.dispose();
@@ -70,6 +84,10 @@ export class CompanionPanel implements vscode.WebviewViewProvider {
 
   async postInit(): Promise<void> {
     if (!this.webview()) return;
+    if (this.applyLaunchSettingsBeforeInit) {
+      this.applyLaunchSettingsBeforeInit = false;
+      await this.applyCharacterLaunchSettings();
+    }
     const state = this.snapshot();
     this.updateViewTitle(state.currentCharacterName);
     await this.post({ type: 'init', state });
@@ -94,6 +112,13 @@ export class CompanionPanel implements vscode.WebviewViewProvider {
     } else {
       await this.post({ type: 'characterLoading', active: false });
     }
+  }
+
+  async applyCharacterLaunchSettings(): Promise<void> {
+    const settings = this.readCharacterLaunchSettings();
+    const currentId = this.registry.currentId();
+    const selectedId = resolveConfiguredCharacterId(this.registry.all(), currentId, settings);
+    if (selectedId !== currentId) await this.registry.setCurrent(selectedId);
   }
 
   async postLayoutChanged(): Promise<void> {
@@ -287,8 +312,23 @@ export class CompanionPanel implements vscode.WebviewViewProvider {
     return this.view?.webview;
   }
 
+  private readCharacterLaunchSettings(): CharacterLaunchSettings {
+    const configuration = vscode.workspace.getConfiguration('guruguru-codechan');
+    return parseCharacterLaunchSettings(
+      configuration.get<unknown>('defaultCharacter'),
+      configuration.get<unknown>('randomCharacterBlacklist'),
+    );
+  }
+
   private updateViewTitle(characterName: string): void {
     if (this.view) this.view.title = characterName;
+  }
+
+  private reportError(error: unknown): void {
+    const message = error instanceof CharacterSelectionError || error instanceof Error
+      ? error.message
+      : String(error);
+    vscode.window.showErrorMessage(`Guruguru Codechan: ${message}`);
   }
 
   private clearTimers(): void {

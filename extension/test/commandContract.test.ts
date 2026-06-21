@@ -68,13 +68,24 @@ describe('command surface contract', () => {
   });
 
   it('keeps optional startup opening exposed as an explicit user setting', () => {
-    const setting = packageJson.contributes?.configuration?.properties?.['guruguru-codechan.openOnStartup'];
+    const settings = packageJson.contributes?.configuration?.properties ?? {};
+    const setting = settings['guruguru-codechan.openOnStartup'];
 
     expect(packageJson.contributes?.configuration?.title).toBe('%configuration.title%');
     expect(setting).toMatchObject({
       type: 'boolean',
       default: false,
       description: '%configuration.openOnStartup.description%',
+    });
+    expect(settings['guruguru-codechan.defaultCharacter']).toMatchObject({
+      type: 'string',
+      default: 'Default',
+      description: '%configuration.defaultCharacter.description%',
+    });
+    expect(settings['guruguru-codechan.randomCharacterBlacklist']).toMatchObject({
+      type: 'array',
+      default: ['Codeちゃん'],
+      description: '%configuration.randomCharacterBlacklist.description%',
     });
   });
 

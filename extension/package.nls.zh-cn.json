@@ -5,6 +5,8 @@
   "views.codechan.name": "Codeちゃん",
   "configuration.title": "Guruguru Codechan",
   "configuration.openOnStartup.description": "在 VS Code 启动后自动打开 Codeちゃん 伙伴视图。",
+  "configuration.defaultCharacter.description": "默认打开的角色名。使用 Default 保持上一次角色，使用 Random 在每次打开视图时随机抽选。",
+  "configuration.randomCharacterBlacklist.description": "Random 模式下有其他角色可用时，从随机抽选中排除的角色名。",
   "commands.category": "Guruguru Codechan",
   "commands.openCanvas.title": "打开 Codeちゃん 视图",
   "commands.switchCharacter.title": "切换角色",

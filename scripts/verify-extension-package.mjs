@@ -46,6 +46,7 @@ const ALLOWED_EXACT = new Set([
   'extension/dist/webview/webview.js',
   'extension/out/assetValidation.js',
   'extension/out/characterRegistry.js',
+  'extension/out/characterSelection.js',
   'extension/out/commands.js',
   'extension/out/extension.js',
   'extension/out/focusTarget.js',

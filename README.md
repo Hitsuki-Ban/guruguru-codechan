@@ -42,6 +42,9 @@ code --install-extension PATH_TO_VSIX --force
 After installing, run `Guruguru Codechan: Open Codechan View` from the Command Palette.
 If you want the view to open automatically after VS Code starts, enable
 `Guruguru Codechan: Open On Startup` in Settings.
+Use `Guruguru Codechan: Default Character` to choose which character opens first.
+Set it to `Default` to keep the last character, or `Random` to pick a character
+when the view opens.
 
 ## Make Your Own Character
 
@@ -70,6 +73,7 @@ To import the folder:
 
 The extension validates the frame names and rejects missing frames or mixed formats.
 Frames larger than 512px are resized to 512px on their longest edge before they are saved.
+`Default` and `Random` are reserved names and cannot be used for imported characters.
 
 Your original asset folder is not changed.
 

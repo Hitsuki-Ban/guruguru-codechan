@@ -5,6 +5,8 @@
   "views.codechan.name": "Codeちゃん",
   "configuration.title": "Guruguru Codechan",
   "configuration.openOnStartup.description": "VS Code 起動後に Codeちゃんビューを自動で開きます。",
+  "configuration.defaultCharacter.description": "標準で開くキャラクター名です。Default は前回のキャラクターを維持し、Random はビューを開くたびに抽選します。",
+  "configuration.randomCharacterBlacklist.description": "Random モードで、他のキャラクターが利用できる場合に抽選から除外するキャラクター名です。",
   "commands.category": "Guruguru Codechan",
   "commands.openCanvas.title": "Codeちゃんビューを開く",
   "commands.switchCharacter.title": "キャラクターを切り替える",

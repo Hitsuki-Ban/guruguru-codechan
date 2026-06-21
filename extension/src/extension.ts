@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { AssetValidationError } from './assetValidation';
+import { isReservedCharacterName } from './characterSelection';
 import { CharacterRegistry } from './characterRegistry';
 import { COMMANDS } from './commands';
 import { CompanionPanel } from './panel';
@@ -13,7 +14,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     vscode.window.registerWebviewViewProvider(CompanionPanel.viewType, panel),
     vscode.commands.registerCommand(COMMANDS.openCanvas, async () => {
       await runUserCommand(async () => {
-        await panel.open();
+        await panel.open({ applyLaunchSettings: true });
       });
     }),
     vscode.commands.registerCommand(COMMANDS.importCharacter, async () => {
@@ -31,11 +32,13 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
           prompt: 'Character names must be unique.',
           ignoreFocusOut: true,
           validateInput(value) {
-            return value.trim().length === 0 ? 'Character name is required.' : undefined;
+            if (value.trim().length === 0) return 'Character name is required.';
+            if (isReservedCharacterName(value)) return 'Default and Random are reserved character names.';
+            return undefined;
           },
         });
         if (name === undefined) return;
-        await panel.open();
+        await panel.open({ applyLaunchSettings: false });
         await panel.postCharacterLoading(true, `Importing ${name.trim()}...`);
         try {
           const record = await registry.importCharacter(folders[0], name);
@@ -58,7 +61,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
           { title: 'Switch Guruguru Character' },
         );
         if (!pick) return;
-        await panel.open();
+        await panel.open({ applyLaunchSettings: false });
         await panel.postCharacterLoading(true, `Loading ${pick.label}...`);
         try {
           const record = await registry.setCurrent(pick.id);
@@ -130,7 +133,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   );
 
   if (vscode.workspace.getConfiguration('guruguru-codechan').get<boolean>('openOnStartup') === true) {
-    await panel.open({ preserveFocus: true });
+    await runUserCommand(async () => {
+      await panel.open({ preserveFocus: true, applyLaunchSettings: true });
+    });
   }
 }
 

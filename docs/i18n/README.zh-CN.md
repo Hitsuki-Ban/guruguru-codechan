@@ -40,6 +40,8 @@ Codeちゃん 会眨眼，静静看着你工作，并在鼠标接近她时用视
 
 安装后，从命令面板执行 `Guruguru Codechan: Open Codechan View`。
 如果希望 VS Code 启动后自动打开视图，可以在设置中启用 `Guruguru Codechan: Open On Startup`。
+可以用 `Guruguru Codechan: Default Character` 指定打开视图时优先显示的角色。
+设为 `Default` 会保持上一次角色，设为 `Random` 会在每次打开视图时随机抽选。
 
 ## 使用自己的角色
 
@@ -69,6 +71,7 @@ F/r0c0.webp ... F/r4c4.webp
 
 扩展会检查帧命名，拒绝缺帧或混合格式的素材。
 长边超过 512px 的图片会在保存到扩展存储前缩小到 512px。原始素材文件夹不会被修改。
+`Default` 和 `Random` 是保留名称，不能用作导入角色名。
 
 ## 为 VS Code 做了哪些调整
 

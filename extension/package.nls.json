@@ -5,6 +5,8 @@
   "views.codechan.name": "Codeちゃん",
   "configuration.title": "Guruguru Codechan",
   "configuration.openOnStartup.description": "Open the Codeちゃん companion view automatically after VS Code startup.",
+  "configuration.defaultCharacter.description": "Character name to open by default. Use Default to keep the last character, or Random to pick one when the view opens.",
+  "configuration.randomCharacterBlacklist.description": "Character names excluded from Random mode when other characters are available.",
   "commands.category": "Guruguru Codechan",
   "commands.openCanvas.title": "Open Codechan View",
   "commands.switchCharacter.title": "Switch Character",

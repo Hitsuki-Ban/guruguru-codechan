@@ -193,6 +193,18 @@ describe('CharacterRegistry storage transactions', () => {
     expect(await readdir(join(env.globalStorageRoot, 'characters'))).toEqual(['mint-pilot']);
   });
 
+  it('rejects reserved launch setting names without creating storage', async () => {
+    const env = await createEnvironment();
+    const source = await createCharacterFixture(env.root, 'reserved-name', 'webp');
+    const registry = new CharacterRegistry(env.context);
+
+    await expect(registry.importCharacter(source, 'Default')).rejects.toThrow(/reserved/);
+    await expect(registry.importCharacter(source, ' random ')).rejects.toThrow(/reserved/);
+
+    expect(await pathExists(join(env.globalStorageRoot, 'characters'))).toBe(false);
+    expect(env.globalState.get<CharacterRecord[]>(CHARACTERS_KEY)).toBeUndefined();
+  });
+
   it('cleans up imported files and restores metadata when import state update fails', async () => {
     const env = await createEnvironment();
     const source = await createCharacterFixture(env.root, 'state-fails', 'webp');

@@ -1,8 +1,10 @@
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { CompanionPanel } from '../src/panel';
+import type { CharacterRecord } from '../src/shared';
 
 const vscodeMockState = vi.hoisted(() => ({
   executeCommand: vi.fn(async () => undefined),
+  configuration: new Map<string, unknown>(),
 }));
 
 vi.mock('vscode', () => ({
@@ -12,7 +14,7 @@ vi.mock('vscode', () => ({
   window: {},
   workspace: {
     getConfiguration: vi.fn(() => ({
-      get: vi.fn(),
+      get: vi.fn((key: string) => vscodeMockState.configuration.get(key)),
     })),
   },
   Uri: {
@@ -21,6 +23,31 @@ vi.mock('vscode', () => ({
 }));
 
 describe('CompanionPanel onboarding behavior', () => {
+  const characters: CharacterRecord[] = [
+    { id: 'sample-codechan', name: 'Codeちゃん', kind: 'builtIn', ext: 'webp' },
+    { id: 'mint-pilot', name: 'Mint Pilot', kind: 'user', ext: 'webp', storageRelativePath: 'characters/mint-pilot' },
+  ];
+
+  beforeEach(() => {
+    vscodeMockState.configuration.clear();
+    vscodeMockState.executeCommand.mockClear();
+  });
+
+  it('applies the configured default character before opening a view', async () => {
+    const setCurrent = vi.fn(async () => characters[1]);
+    vscodeMockState.configuration.set('defaultCharacter', 'Mint Pilot');
+    vscodeMockState.configuration.set('randomCharacterBlacklist', ['Codeちゃん']);
+    const panel = new CompanionPanel({} as never, {
+      all: () => characters,
+      currentId: () => 'sample-codechan',
+      setCurrent,
+    } as never);
+
+    await panel.applyCharacterLaunchSettings();
+
+    expect(setCurrent).toHaveBeenCalledWith('mint-pilot');
+  });
+
   it('opens the Codechan view before toggling settings from a cold command', async () => {
     const panel = new CompanionPanel({} as never, {} as never);
 
