@@ -46,6 +46,8 @@ export interface CompanionStateSnapshot {
 export type HostToWebviewMessage =
   | { type: 'init'; state: CompanionStateSnapshot }
   | { type: 'characterChanged'; state: CompanionStateSnapshot }
+  | { type: 'characterLoading'; active: true; message: string }
+  | { type: 'characterLoading'; active: false }
   | { type: 'layoutChanged'; layout: CompanionLayout }
   | { type: 'focusTarget'; x: number; y: number; source: FocusTargetSource }
   | { type: 'settingsMode'; open: boolean }

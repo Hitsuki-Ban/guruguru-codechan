@@ -56,6 +56,7 @@ export class CompanionPanel implements vscode.WebviewViewProvider {
       ],
     };
     webviewView.webview.html = this.html(webviewView.webview);
+    this.updateViewTitle(this.registry.current().name);
 
     const messageSubscription = webviewView.webview.onDidReceiveMessage((message: unknown) => {
       void this.handleRawMessage(message);
@@ -69,14 +70,30 @@ export class CompanionPanel implements vscode.WebviewViewProvider {
 
   async postInit(): Promise<void> {
     if (!this.webview()) return;
-    await this.post({ type: 'init', state: this.snapshot() });
+    const state = this.snapshot();
+    this.updateViewTitle(state.currentCharacterName);
+    await this.post({ type: 'init', state });
     await this.postSettingsMode();
   }
 
   async postCharacterChanged(): Promise<void> {
     if (!this.webview()) return;
-    await this.post({ type: 'characterChanged', state: this.snapshot() });
+    const state = this.snapshot();
+    this.updateViewTitle(state.currentCharacterName);
+    await this.post({ type: 'characterChanged', state });
     await this.postSettingsMode();
+  }
+
+  async postCharacterLoading(active: true, message: string): Promise<void>;
+  async postCharacterLoading(active: false): Promise<void>;
+  async postCharacterLoading(active: boolean, message?: string): Promise<void> {
+    if (!this.webview()) return;
+    if (active) {
+      if (message === undefined) throw new Error('Character loading message is required while active.');
+      await this.post({ type: 'characterLoading', active: true, message });
+    } else {
+      await this.post({ type: 'characterLoading', active: false });
+    }
   }
 
   async postLayoutChanged(): Promise<void> {
@@ -268,6 +285,10 @@ export class CompanionPanel implements vscode.WebviewViewProvider {
 
   private webview(): vscode.Webview | undefined {
     return this.view?.webview;
+  }
+
+  private updateViewTitle(characterName: string): void {
+    if (this.view) this.view.title = characterName;
   }
 
   private clearTimers(): void {

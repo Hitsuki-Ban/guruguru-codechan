@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.1
+
+- Shows a loading screen while importing or switching character assets.
+- Updates the companion view title to the active character name when the character changes.
+- Sets the default tracking range to 150px and the default tracking speed to 0.18.
+
 ## 0.6.0
 
 - Improves editor-cursor gaze tracking with stable four-direction movement after the pointer leaves the companion view.

@@ -18,9 +18,9 @@ describe('DEFAULT_LAYOUT', () => {
     expect(DEFAULT_LAYOUT.mouthSync).toBe(false);
   });
 
-  it('keeps original guruguru tracking defaults and automatic blink enabled', () => {
-    expect(DEFAULT_LAYOUT.trackingRange).toBe(340);
-    expect(DEFAULT_LAYOUT.trackingSpeed).toBe(0.3);
+  it('keeps compact tracking defaults and automatic blink enabled', () => {
+    expect(DEFAULT_LAYOUT.trackingRange).toBe(150);
+    expect(DEFAULT_LAYOUT.trackingSpeed).toBe(0.18);
     expect(DEFAULT_LAYOUT.autoBlink).toBe(true);
   });
 

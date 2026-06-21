@@ -42,9 +42,40 @@ button:active {
 
 .loading {
   display: grid;
+  gap: 10px;
   place-items: center;
   color: var(--vscode-descriptionForeground);
   font-size: 13px;
+}
+
+.loadingOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  background: var(--vscode-editor-background);
+}
+
+.loadingSpinner {
+  width: 26px;
+  height: 26px;
+  border: 2px solid var(--vscode-panel-border);
+  border-top-color: var(--vscode-focusBorder);
+  border-radius: 50%;
+  animation: loadingSpin 0.88s linear infinite;
+}
+
+.loadingText {
+  max-width: min(220px, calc(100% - 32px));
+  overflow: hidden;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@keyframes loadingSpin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .stage {
@@ -413,6 +444,11 @@ body.vscode-high-contrast .stage {
   background: var(--vscode-editor-background);
 }
 
+body.vscode-high-contrast .loadingSpinner {
+  border-color: var(--vscode-contrastBorder);
+  border-top-color: var(--vscode-contrastActiveBorder);
+}
+
 body.vscode-high-contrast .triangleButton,
 body.vscode-high-contrast .assetButton,
 body.vscode-high-contrast .tweaksPanel,
@@ -442,5 +478,9 @@ body.vscode-high-contrast .zoomSlider:focus-visible {
   .settingsButton,
   .gazeLockMarker {
     transition: none;
+  }
+
+  .loadingSpinner {
+    animation: none;
   }
 }

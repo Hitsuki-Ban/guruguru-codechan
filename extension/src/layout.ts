@@ -12,8 +12,8 @@ export const DEFAULT_LAYOUT: CompanionLayout = {
   y: 50,
   scale: 0.62,
   mouthSync: false,
-  trackingRange: 340,
-  trackingSpeed: 0.3,
+  trackingRange: 150,
+  trackingSpeed: 0.18,
   autoBlink: true,
 };
 

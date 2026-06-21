@@ -35,10 +35,15 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
           },
         });
         if (name === undefined) return;
-        const record = await registry.importCharacter(folders[0], name);
         await panel.open();
-        await panel.postCharacterChanged();
-        vscode.window.showInformationMessage(`Imported character: ${record.name}`);
+        await panel.postCharacterLoading(true, `Importing ${name.trim()}...`);
+        try {
+          const record = await registry.importCharacter(folders[0], name);
+          await panel.postCharacterChanged();
+          vscode.window.showInformationMessage(`Imported character: ${record.name}`);
+        } finally {
+          await panel.postCharacterLoading(false);
+        }
       });
     }),
     vscode.commands.registerCommand(COMMANDS.switchCharacter, async () => {
@@ -53,10 +58,15 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
           { title: 'Switch Guruguru Character' },
         );
         if (!pick) return;
-        const record = await registry.setCurrent(pick.id);
         await panel.open();
-        await panel.postCharacterChanged();
-        vscode.window.showInformationMessage(`Switched character: ${record.name}`);
+        await panel.postCharacterLoading(true, `Loading ${pick.label}...`);
+        try {
+          const record = await registry.setCurrent(pick.id);
+          await panel.postCharacterChanged();
+          vscode.window.showInformationMessage(`Switched character: ${record.name}`);
+        } finally {
+          await panel.postCharacterLoading(false);
+        }
       });
     }),
     vscode.commands.registerCommand(COMMANDS.deleteCharacter, async () => {

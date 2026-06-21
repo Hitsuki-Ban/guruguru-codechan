@@ -71,6 +71,7 @@ function App() {
   const [state, setState] = React.useState<CompanionStateSnapshot | undefined>();
   const [settingsOpen, setSettingsOpen] = React.useState(false);
   const [lockPrompt, setLockPrompt] = React.useState<LockPromptState | undefined>();
+  const [loadingMessage, setLoadingMessage] = React.useState<string | undefined>();
   const [cell, setCell] = React.useState<Cell>({ row: 2, col: 2 });
   const [blink, setBlink] = React.useState(false);
   const [mouthLevel, setMouthLevel] = React.useState<0 | 1 | 2>(0);
@@ -200,6 +201,7 @@ function App() {
         setVisibleSlot(0);
         setState(message.state);
         stateRef.current = message.state;
+        setLoadingMessage(undefined);
         mouthLevelRef.current = message.state.mouthLevel;
         setMouthLevel(message.state.mouthLevel);
         setLockPrompt(undefined);
@@ -218,6 +220,8 @@ function App() {
           }
           return next;
         });
+      } else if (message.type === 'characterLoading') {
+        setLoadingMessage(message.active ? message.message : undefined);
       } else if (message.type === 'focusTarget') {
         hostTarget.current = { x: message.x, y: message.y };
         if (!stateRef.current?.layout.gazeLock && !pointerInside.current) targetFocusVector(message.x, message.y);
@@ -419,7 +423,7 @@ function App() {
   }, [applyLayout, settingsOpen]);
 
   if (!state) {
-    return <div className="loading">Loading Guruguru Codechan...</div>;
+    return <LoadingScreen message={loadingMessage ?? 'Loading Guruguru Codechan...'} />;
   }
 
   const layout = state.layout;
@@ -522,6 +526,17 @@ function App() {
           </button>
         </div>
       )}
+
+      {loadingMessage && <LoadingScreen message={loadingMessage} overlay />}
+    </div>
+  );
+}
+
+function LoadingScreen({ message, overlay = false }: { message: string; overlay?: boolean }) {
+  return (
+    <div className={overlay ? 'loading loadingOverlay' : 'loading'} role="status" aria-live="polite">
+      <span className="loadingSpinner" aria-hidden="true" />
+      <span className="loadingText">{message}</span>
     </div>
   );
 }
